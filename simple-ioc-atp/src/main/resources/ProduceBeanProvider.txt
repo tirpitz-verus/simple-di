@@ -1,0 +1,19 @@
+package mlesiewski.simpleioc;
+
+class {{beanProviderSimpleName}} implements BeanProvider<{{returnTypeName}}> {
+
+    static {
+        BeanRegistry.INSTANCE.register(new {{beanProviderSimpleName}}(), "{{returnTypeName}}");
+    }
+
+    private final {{returnTypeName}} instance;
+
+    {{beanProviderSimpleName}}() {
+        {{producerTypeName}} producer = new {{producerTypeName}}();
+        instance = producer.{{producerMethodName}}();
+    }
+
+    public {{returnTypeName}} produce() {
+        return instance;
+    }
+}
