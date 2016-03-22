@@ -6,17 +6,16 @@ import java.util.HashMap;
 class BeanRegistryImpl {
 
     final HashMap<String, Scope> scopes;
-    final private String DEFAULT_SCOPE_NAME = "appScope";
 
     /** Constructs a new instance initialized with "appScope" and "toggleScope". */
     BeanRegistryImpl() {
         scopes = new HashMap<>();
         // appScope
-        Scope appScope = new DefaultScopeImpl(DEFAULT_SCOPE_NAME);
+        Scope appScope = new DefaultScopeImpl(Scope.APP_SCOPE);
         appScope.start();
         scopes.put(appScope.getName(), appScope);
         // toggleScope
-        Scope toggleScope = new DefaultScopeImpl("toggleScope");
+        Scope toggleScope = new DefaultScopeImpl(Scope.TOGGLE_SCOPE);
         scopes.put(toggleScope.getName(), toggleScope);
     }
 
@@ -35,7 +34,7 @@ class BeanRegistryImpl {
      * @return a bean instance
      */
     <T> T getBean(String name) {
-        return getBean(name, DEFAULT_SCOPE_NAME);
+        return getBean(name, Scope.DEFAULT_SCOPE);
     }
 
     /** @return a bean instance from the desired scope or default scope as a fallback. */
@@ -60,7 +59,7 @@ class BeanRegistryImpl {
     private Scope getScope(String scopeName) {
         boolean validScopeName = scopes.containsKey(scopeName);
         if (!validScopeName) {
-            scopeName = DEFAULT_SCOPE_NAME;
+            scopeName = Scope.DEFAULT_SCOPE;
         }
         return scopes.get(scopeName);
     }
@@ -72,7 +71,7 @@ class BeanRegistryImpl {
      * @param beanProviderName a name under which this provider is going to be registered
      */
     <T> void register(BeanProvider<T> beanProvider, String beanProviderName) {
-        register(beanProvider, beanProviderName, DEFAULT_SCOPE_NAME);
+        register(beanProvider, beanProviderName, Scope.DEFAULT_SCOPE);
     }
 
     /**

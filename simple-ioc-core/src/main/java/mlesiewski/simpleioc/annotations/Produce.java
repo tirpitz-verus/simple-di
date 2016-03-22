@@ -17,5 +17,5 @@ public @interface Produce {
     String scope() default "";
 
     /** A name of {@link Bean} that is being produced. */
-    String name();
+    String name() default "";
 }
