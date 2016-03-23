@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 public class ScopedNamedBeanTest {
 
     @Test
-    public void testCall() throws Exception {
+    public void scopedNamedBeanIsInjectable() throws Exception {
         // given
         ScopedNamedBean bean = BeanRegistry.getBean("scoped named bean");
         // when

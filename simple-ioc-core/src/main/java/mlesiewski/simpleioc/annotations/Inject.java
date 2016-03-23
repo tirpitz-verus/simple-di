@@ -6,7 +6,7 @@ import java.lang.annotation.*;
 
 /** Marks a field or a constructor argument as an injection point. */
 @Retention(RetentionPolicy.SOURCE)
-@Target({ElementType.FIELD, ElementType.CONSTRUCTOR})
+@Target({ElementType.FIELD, ElementType.PARAMETER})
 @Documented
 public @interface Inject {
 

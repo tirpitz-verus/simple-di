@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class DefaultScopeDefaultNameBeanTest {
 
     @Test
-    public void testCall() throws Exception {
+    public void defaultScopeDefaultNameBeanIsInjectable() throws Exception {
         // given
         DefaultScopeDefaultNameBean bean = BeanRegistry.getBean(DefaultScopeDefaultNameBean.class);
         // when
