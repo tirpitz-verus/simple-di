@@ -24,4 +24,14 @@ public class ConstructorInjectionClientTest {
         assertEquals(BeanInjectedByType.CALL_UUID, defaultScopeByTypeActual);
         assertEquals(BeanInjectedByType.CALL_UUID, scopedByTypeActual);
     }
+
+    @Test
+    public void injectsBeansIntoAnnotatedConstructor() throws Exception {
+        // given
+        ConstructorInjectionClient2 injectionClient = BeanRegistry.getBean(ConstructorInjectionClient2.class);
+        // when
+        UUID actual = injectionClient.bean.call();
+        // then
+        assertEquals(BeanInjectedByType.CALL_UUID, actual);
+    }
 }

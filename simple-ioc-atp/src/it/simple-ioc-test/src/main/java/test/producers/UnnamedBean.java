@@ -1,7 +1,8 @@
 package test.producers;
 
-import java.util.UUID;
+import mlesiewski.simpleioc.annotations.Bean;
 
+@Bean
 public class UnnamedBean {
 
     public UnnamedBean(String name) {
