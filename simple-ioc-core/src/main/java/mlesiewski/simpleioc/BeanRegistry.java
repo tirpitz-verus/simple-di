@@ -1,6 +1,7 @@
 package mlesiewski.simpleioc;
 
 import mlesiewski.simpleioc.annotations.Bean;
+import mlesiewski.simpleioc.scopes.Scope;
 
 /** A class for getting beans from. It actually a static interface to the {@link BeanRegistryImpl}. */
 public class BeanRegistry {

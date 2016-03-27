@@ -1,26 +1,32 @@
 package mlesiewski.simpleioc;
 
+import mlesiewski.simpleioc.scopes.ApplicationScope;
+import mlesiewski.simpleioc.scopes.Scope;
+import mlesiewski.simpleioc.scopes.ToggledScope;
+
 import java.util.HashMap;
 
-/** A delegate for {@link BeanRegistry}. */
+/** A delegate for {@link BeanRegistry}. Default scope is {@link ApplicationScope}. */
 class BeanRegistryImpl {
 
     final HashMap<String, Scope> scopes;
+    final String DEFAULT_SCOPE;
 
     /** Constructs a new instance initialized with "appScope" and "toggleScope". */
     BeanRegistryImpl() {
         scopes = new HashMap<>();
         // appScope
-        Scope appScope = new DefaultScopeImpl(Scope.APP_SCOPE);
-        appScope.start();
+        Scope appScope = new ApplicationScope();
         scopes.put(appScope.getName(), appScope);
+        // default scope
+        DEFAULT_SCOPE = appScope.getName();
         // toggleScope
-        Scope toggleScope = new DefaultScopeImpl(Scope.TOGGLE_SCOPE);
+        Scope toggleScope = new ToggledScope();
         scopes.put(toggleScope.getName(), toggleScope);
     }
 
     /**
-     * Calls {@link BeanRegistryImpl#getBean(Class)}.
+     * Calls {@link BeanRegistryImpl#getBean(String)}.
      *
      * @return a bean instance
      */
@@ -34,7 +40,7 @@ class BeanRegistryImpl {
      * @return a bean instance
      */
     <T> T getBean(String name) {
-        return getBean(name, Scope.DEFAULT_SCOPE);
+        return getBean(name, DEFAULT_SCOPE);
     }
 
     /** @return a bean instance from the desired scope or default scope as a fallback. */
@@ -51,6 +57,12 @@ class BeanRegistryImpl {
      * @param scopeName        name of the {@link Scope} to register this provider with
      */
     <T> void register(BeanProvider<T> beanProvider, String beanProviderName, String scopeName) {
+        if (beanProviderName == null) {
+            throw new SimpleIocException("Cannot register a BeanProvider with a null name");
+        }
+        if (beanProvider == null) {
+            throw new SimpleIocException("Cannot register a null BeanProvider under name '" + beanProviderName + "'");
+        }
         Scope scope = getScope(scopeName);
         scope.register(beanProvider, beanProviderName);
     }
@@ -59,7 +71,7 @@ class BeanRegistryImpl {
     private Scope getScope(String scopeName) {
         boolean validScopeName = scopes.containsKey(scopeName);
         if (!validScopeName) {
-            scopeName = Scope.DEFAULT_SCOPE;
+            scopeName = DEFAULT_SCOPE;
         }
         return scopes.get(scopeName);
     }
@@ -71,7 +83,7 @@ class BeanRegistryImpl {
      * @param beanProviderName a name under which this provider is going to be registered
      */
     <T> void register(BeanProvider<T> beanProvider, String beanProviderName) {
-        register(beanProvider, beanProviderName, Scope.DEFAULT_SCOPE);
+        register(beanProvider, beanProviderName, DEFAULT_SCOPE);
     }
 
     /**

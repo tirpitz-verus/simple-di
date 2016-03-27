@@ -1,4 +1,7 @@
-package mlesiewski.simpleioc;
+package mlesiewski.simpleioc.scopes;
+
+import mlesiewski.simpleioc.BeanProvider;
+import mlesiewski.simpleioc.SimpleIocException;
 
 import java.util.HashMap;
 import java.util.WeakHashMap;
@@ -10,19 +13,20 @@ import java.util.WeakHashMap;
  */
 class DefaultScopeImpl implements Scope {
 
-    private final String name;
-    private boolean started = false;
-    private HashMap<String, BeanProvider> providers = new HashMap<>();
-    WeakHashMap<String, Object> beanCache = new WeakHashMap<>();
+    final String name;
+    final HashMap<String, BeanProvider> providers = new HashMap<>();
+    final WeakHashMap<String, Object> beanCache = new WeakHashMap<>();
+    boolean started = false;
 
     DefaultScopeImpl(String name) {
         this.name = name;
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T> T getBean(String name) {
         if (!started) {
-            throw new SimpleIocException("Scope '" + getName() + "'is not started");
+            throw new SimpleIocException("Scope '" + getName() + "' is not started");
         }
         if (!providers.containsKey(name)) {
             throw new SimpleIocException("Scope '" + getName() + "' does not have a BeanProvider instance registered under the name '" + name + "'");
@@ -31,7 +35,8 @@ class DefaultScopeImpl implements Scope {
         return bean;
     }
 
-    private <T> T getBeanFromBeans(String name) {
+    /** Returns {@link mlesiewski.simpleioc.annotations.Bean} instance from cache. */
+    <T> T getBeanFromBeans(String name) {
         @SuppressWarnings("unchecked")
         T bean = (T) beanCache.get(name);
         if (bean == null) {
@@ -41,31 +46,35 @@ class DefaultScopeImpl implements Scope {
         return bean;
     }
 
-    private <T> T provideBean(String name) {
+    /** Calls a provider for a {@link mlesiewski.simpleioc.annotations.Bean} instance. */
+    <T> T provideBean(String name) {
         T bean;
         try {
             @SuppressWarnings("unchecked")
             BeanProvider<T> provider = providers.get(name);
             bean = provider.provide();
         } catch (ClassCastException ccs) {
-            throw new SimpleIocException("In Scope '" + getName() + "'BeanProvider '" + name + "' produced a value with a wrong type", ccs);
+            throw new SimpleIocException("In Scope '" + getName() + "' BeanProvider '" + name + "' produced a value with a wrong type", ccs);
         }
         if (bean == null) {
-            throw new SimpleIocException("In Scope '" + getName() + "'BeanProvider '" + name + "' produced a null value");
+            throw new SimpleIocException("In Scope '" + getName() + "' BeanProvider '" + name + "' produced a null value");
         }
         return bean;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean hasBean(String name) {
         return started && providers.containsKey(name);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getName() {
         return name;
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T> void register(BeanProvider<T> beanProvider, String name) {
         if (providers.containsKey(name)) {
@@ -74,11 +83,13 @@ class DefaultScopeImpl implements Scope {
         providers.put(name, beanProvider);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void start() {
         started = true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void end() {
         started = false;

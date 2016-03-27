@@ -1,5 +1,7 @@
-package mlesiewski.simpleioc;
+package mlesiewski.simpleioc.scopes;
 
+import mlesiewski.simpleioc.BeanProvider;
+import mlesiewski.simpleioc.SimpleIocException;
 import mlesiewski.simpleioc.annotations.Bean;
 
 /**
@@ -7,15 +9,6 @@ import mlesiewski.simpleioc.annotations.Bean;
  * Only a started Scope can have a {@link Bean}.
  */
 public interface Scope {
-
-    /** Ties a {@link Bean} to the application scope. */
-    String APP_SCOPE = "mlesiewski.simpleioc.Scope.APP_SCOPE";
-
-    /** Ties a {@link Bean} to the default scope. */
-    String DEFAULT_SCOPE = APP_SCOPE;
-
-    /** Ties a {@link Bean} to the toggle scope. */
-    String TOGGLE_SCOPE = "mlesiewski.simpleioc.Scope.TOGGLE_SCOPE";
 
     /**
      * @param name a name under which a {@link BeanProvider} was registered

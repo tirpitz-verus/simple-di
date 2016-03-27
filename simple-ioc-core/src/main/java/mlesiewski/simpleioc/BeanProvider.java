@@ -1,5 +1,7 @@
 package mlesiewski.simpleioc;
 
+import mlesiewski.simpleioc.scopes.Scope;
+
 /** An interface for classes that can provide a bean. */
 public interface BeanProvider<T> {
 

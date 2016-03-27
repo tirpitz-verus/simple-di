@@ -1,6 +1,6 @@
 package test.annotatedbeans;
 
-import mlesiewski.simpleioc.Scope;
+import mlesiewski.simpleioc.scopes.Scope;
 import mlesiewski.simpleioc.annotations.Bean;
 
 import java.util.UUID;

@@ -1,6 +1,6 @@
 package test.inject;
 
-import mlesiewski.simpleioc.Scope;
+import mlesiewski.simpleioc.scopes.Scope;
 import mlesiewski.simpleioc.annotations.Inject;
 
 public class FieldInjectionClient {

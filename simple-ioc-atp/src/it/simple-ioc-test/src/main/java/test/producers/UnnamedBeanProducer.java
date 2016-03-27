@@ -1,6 +1,6 @@
 package test.producers;
 
-import mlesiewski.simpleioc.Scope;
+import mlesiewski.simpleioc.scopes.Scope;
 import mlesiewski.simpleioc.annotations.Produce;
 
 public class UnnamedBeanProducer {

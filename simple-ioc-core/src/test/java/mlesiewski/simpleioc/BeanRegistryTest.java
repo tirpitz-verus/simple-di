@@ -1,5 +1,7 @@
 package mlesiewski.simpleioc;
 
+import mlesiewski.simpleioc.scopes.ApplicationScope;
+import org.omg.CORBA.portable.ApplicationException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -34,7 +36,7 @@ public class BeanRegistryTest {
         assertThat(bean, is(not(nullValue())));
     }
 
-    @Test(expectedExceptions = SimpleInjectionCase.class)
+    @Test(expectedExceptions = SimpleIocException.class)
     public void throwsExceptionIfBeanProviderRegisteredTwice() throws Exception {
         // given
         BeanProvider<Object> provider = testBeanProvider();
@@ -45,14 +47,14 @@ public class BeanRegistryTest {
         // then - error
     }
 
-    @Test(expectedExceptions = SimpleInjectionCase.class)
+    @Test(expectedExceptions = SimpleIocException.class)
     public void throwsExceptionIfRegisteringNullBeanProvider() throws Exception {
         //when
         BeanRegistry.register(null, "nonNull");
         // then - error
     }
 
-    @Test(expectedExceptions = SimpleInjectionCase.class)
+    @Test(expectedExceptions = SimpleIocException.class)
     public void throwsExceptionIfRegisteringUnderNullName() throws Exception {
         // given
         BeanProvider<Object> provider = testBeanProvider();
@@ -77,5 +79,7 @@ public class BeanRegistryTest {
     @BeforeMethod
     public void setUp() throws Exception {
         BeanRegistry.DELEGATE.scopes.clear();
+        ApplicationScope scope = new ApplicationScope();
+        BeanRegistry.DELEGATE.scopes.put(scope.getName(), scope);
     }
 }

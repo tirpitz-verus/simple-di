@@ -1,6 +1,6 @@
 package mlesiewski.simpleioc.annotations;
 
-import mlesiewski.simpleioc.Scope;
+import mlesiewski.simpleioc.scopes.Scope;
 
 import java.lang.annotation.*;
 

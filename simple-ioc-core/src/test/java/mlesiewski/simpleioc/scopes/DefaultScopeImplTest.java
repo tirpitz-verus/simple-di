@@ -1,5 +1,7 @@
-package mlesiewski.simpleioc;
+package mlesiewski.simpleioc.scopes;
 
+import mlesiewski.simpleioc.BeanProvider;
+import mlesiewski.simpleioc.SimpleIocException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -7,6 +9,8 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 public class DefaultScopeImplTest {
 
@@ -37,23 +41,23 @@ public class DefaultScopeImplTest {
         assertThat(hasBean, is(true));
     }
 
-    @Test(expectedExceptions = SimpleInjectionCase.class)
+    @Test(expectedExceptions = SimpleIocException.class)
     public void throwsExceptionIfGettingNotRegisteredName() throws Exception {
         // given
         String name = "not registered";
         // when
-        scope.hasBean(name);
+        scope.getBean(name);
         // then - exception
     }
 
-    @Test(expectedExceptions = SimpleInjectionCase.class)
+    @Test(expectedExceptions = SimpleIocException.class)
     public void throwsExceptionIfGettingBeanAndNotStarted() throws Exception {
         // given
         String name = "registered";
         scope.register(testBeanProvider(), name);
         scope.end();
         // when
-        scope.hasBean(name);
+        scope.getBean(name);
         // then - exception
     }
 
@@ -78,15 +82,17 @@ public class DefaultScopeImplTest {
         // when
         boolean hasBean = scope.hasBean(name);
         // then
-        assertThat(hasBean, is(false));
+        assertFalse(hasBean);
     }
 
     @Test
     public void notifiesAllProvidersAboutScopeEnding() throws Exception {
+        // given
+        scope.register(testBeanProvider(), "whatever");
         // when
         scope.end();
         // then
-        assertThat(scopeEnded, is(true));
+        assertTrue(scopeEnded);
     }
 
     @Test
