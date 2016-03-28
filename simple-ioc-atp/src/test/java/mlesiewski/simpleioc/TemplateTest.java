@@ -1,23 +1,24 @@
 package mlesiewski.simpleioc;
 
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.Test;
 
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.Assert.*;
 
 public class TemplateTest {
 
-    @Test(dataProvider = "getTemplateNames")
-    public void canLoadTemplates(String templateName) throws IOException {
+    @Test
+    public void compilesTemplates() throws Exception {
+        // given
+        StringBuilder builder = new StringBuilder("text text {{keyWord}} text");
+        Template template = new Template(builder);
+        Map<String, String> input = new HashMap<>();
+        input.put("keyWord", "text");
         // when
-        Template.get(templateName);
-        // then -- no error
-    }
-
-    @DataProvider
-    public Object[][] getTemplateNames() {
-        return new Object[][] {
-                {"ProduceBeanProvider"}
-        };
+        String actual = template.compile(input);
+        // then
+        assertEquals("text text text text", actual);
     }
 }

@@ -1,19 +1,15 @@
 package mlesiewski.simpleioc;
 
+import javax.annotation.Generated;
+
+@Generated("mlesiewski.simpleioc.SimpleIocProcessor")
 class {{beanProviderSimpleName}} implements BeanProvider<{{returnTypeName}}> {
 
     static {
-        BeanRegistry.INSTANCE.register(new {{beanProviderSimpleName}}(), "{{returnTypeName}}");
-    }
-
-    private final {{returnTypeName}} instance;
-
-    {{beanProviderSimpleName}}() {
-        {{producerTypeName}} producer = new {{producerTypeName}}();
-        instance = producer.{{producerMethodName}}();
+        BeanRegistry.register(new {{beanProviderSimpleName}}(), "{{returnTypeName}}");
     }
 
     public {{returnTypeName}} produce() {
-        return instance;
+        return BeanRegistry.getBean({{producerTypeName}}.class).{{producerMethodName}}();
     }
 }

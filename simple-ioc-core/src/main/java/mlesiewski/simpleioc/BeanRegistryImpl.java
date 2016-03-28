@@ -31,7 +31,7 @@ class BeanRegistryImpl {
     }
 
     /**
-     * Calls {@link BeanRegistryImpl#getBean(String)}.
+     * Calls {@link #getBean(String)}.
      *
      * @return a bean instance
      */
@@ -40,7 +40,7 @@ class BeanRegistryImpl {
     }
 
     /**
-     * Calls {@link BeanRegistryImpl#getBean(String, String)} with a default scope name.
+     * Calls {@link #getBean(String, String)} with a default scope name.
      *
      * @return a bean instance
      */
