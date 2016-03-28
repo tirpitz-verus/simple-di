@@ -3,6 +3,8 @@ package mlesiewski.simpleioc.scopes;
 import mlesiewski.simpleioc.BeanProvider;
 import mlesiewski.simpleioc.SimpleIocException;
 import mlesiewski.simpleioc.annotations.Bean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 
@@ -10,6 +12,8 @@ import java.util.HashMap;
  * Global application scope - beans will be created eagerly. This scope is created started and will not end.
  */
 public class ApplicationScope extends DefaultScopeImpl {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationScope.class);
 
     /** Ties a {@link Bean} to the application scope. */
     public static final String NAME = "mlesiewski.simpleioc.Scope.APP_SCOPE";
@@ -38,6 +42,7 @@ public class ApplicationScope extends DefaultScopeImpl {
     /** Calls {@link BeanProvider#provide()} immediately. */
     @Override
     public <T> void register(BeanProvider<T> beanProvider, String name) {
+        LOGGER.trace("register({}, {})", beanProvider, name);
         if (eagerBeanCache.containsKey(name)) {
             throw new SimpleIocException("Scope '" + getName() + "' already has a BeanProvider instance registered under the name '" + name + "'");
         }
@@ -51,6 +56,7 @@ public class ApplicationScope extends DefaultScopeImpl {
     /** Gets {@link Bean} from the eager bean cache. */
     @Override
     public <T> T getBean(String name) {
+        LOGGER.trace("getBean({})", name);
         if (!eagerBeanCache.containsKey(name)) {
             throw new SimpleIocException("Scope '" + getName() + "' does not have a BeanProvider instance registered under the name '" + name + "'");
         }

@@ -2,6 +2,8 @@ package mlesiewski.simpleioc.scopes;
 
 import mlesiewski.simpleioc.BeanProvider;
 import mlesiewski.simpleioc.SimpleIocException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.WeakHashMap;
@@ -13,18 +15,22 @@ import java.util.WeakHashMap;
  */
 class DefaultScopeImpl implements Scope {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultScopeImpl.class);
+
     final String name;
     final HashMap<String, BeanProvider> providers = new HashMap<>();
     final WeakHashMap<String, Object> beanCache = new WeakHashMap<>();
     boolean started = false;
 
     DefaultScopeImpl(String name) {
+        LOGGER.debug("instantiating scope with name '{}'", name);
         this.name = name;
     }
 
     /** {@inheritDoc} */
     @Override
     public <T> T getBean(String name) {
+        LOGGER.trace("getBean({})", name);
         if (!started) {
             throw new SimpleIocException("Scope '" + getName() + "' is not started");
         }
@@ -37,9 +43,11 @@ class DefaultScopeImpl implements Scope {
 
     /** Returns {@link mlesiewski.simpleioc.annotations.Bean} instance from cache. */
     <T> T getBeanFromBeans(String name) {
+        LOGGER.trace("getBeanFromBeans({})", name);
         @SuppressWarnings("unchecked")
         T bean = (T) beanCache.get(name);
         if (bean == null) {
+            LOGGER.trace("bean not in cache, asking provider");
             bean = provideBean(name);
             beanCache.put(name, bean);
         }
@@ -48,6 +56,7 @@ class DefaultScopeImpl implements Scope {
 
     /** Calls a provider for a {@link mlesiewski.simpleioc.annotations.Bean} instance. */
     <T> T provideBean(String name) {
+        LOGGER.trace("provideBean({})", name);
         T bean;
         try {
             @SuppressWarnings("unchecked")
@@ -77,6 +86,7 @@ class DefaultScopeImpl implements Scope {
     /** {@inheritDoc} */
     @Override
     public <T> void register(BeanProvider<T> beanProvider, String name) {
+        LOGGER.trace("register({}, name)", beanProvider, name);
         if (providers.containsKey(name)) {
             throw new SimpleIocException("Scope '" + getName() + "' already has a BeanProvider instance registered under the name '" + name + "'");
         }
@@ -86,12 +96,14 @@ class DefaultScopeImpl implements Scope {
     /** {@inheritDoc} */
     @Override
     public void start() {
+        LOGGER.trace("start() on scope '{}'", name);
         started = true;
     }
 
     /** {@inheritDoc} */
     @Override
     public void end() {
+        LOGGER.trace("end() on scope '{}'", name);
         started = false;
         providers.values().forEach(BeanProvider::scopeEnded);
     }
