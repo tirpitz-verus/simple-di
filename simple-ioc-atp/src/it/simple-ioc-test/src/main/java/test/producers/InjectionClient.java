@@ -1,6 +1,6 @@
 package test.producers;
 
-import mlesiewski.simpleioc.scopes.Scope;
+import mlesiewski.simpleioc.scopes.ApplicationScope;
 import mlesiewski.simpleioc.annotations.Inject;
 
 public class InjectionClient {
@@ -14,6 +14,6 @@ public class InjectionClient {
     @Inject(name = UnnamedBeanProducer.NAMED_B)
     UnnamedBean namedBeanB;
 
-    @Inject(scope = Scope.APP_SCOPE)
+    @Inject(scope = ApplicationScope.NAME)
     UnnamedBean scopedUnnamedBean;
 }

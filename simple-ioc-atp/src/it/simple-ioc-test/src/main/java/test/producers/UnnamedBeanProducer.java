@@ -1,6 +1,6 @@
 package test.producers;
 
-import mlesiewski.simpleioc.scopes.Scope;
+import mlesiewski.simpleioc.scopes.ApplicationScope;
 import mlesiewski.simpleioc.annotations.Produce;
 
 public class UnnamedBeanProducer {
@@ -25,7 +25,7 @@ public class UnnamedBeanProducer {
         return new UnnamedBean(NAMED_B);
     }
 
-    @Produce(scope = Scope.APP_SCOPE)
+    @Produce(scope = ApplicationScope.NAME)
     UnnamedBean produceScopedUnnamedBean() {
         return new UnnamedBean(SCOPED_UNNAMED);
     }

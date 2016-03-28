@@ -1,5 +1,7 @@
 package mlesiewski.simpleioc;
 
+import mlesiewski.simpleioc.annotations.Produce;
+
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
@@ -19,38 +21,38 @@ public class SimpleIocProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        Log.set(processingEnv.getMessager());
+        Logger.set(processingEnv.getMessager());
 
         Filer filer = processingEnv.getFiler();
-        FileObject resource;
+        FileObject resource = null;
 
         try {
             resource = filer.getResource(StandardLocation.CLASS_PATH, "", "ProduceBeanProvider.txt");
-            Log.note("3 is null " + (resource == null));
+            Logger.note("3 is null " + (resource == null));
         } catch (IOException e) {
-            Log.error("3 " + e.getMessage());
+            Logger.error("3 " + e.getMessage());
         }
 
-        Log.note("wrotki");
+        Logger.note("wrotki");
 
         Set<? extends Element> elementsAnnotatedWithProduce = roundEnv.getElementsAnnotatedWith(Produce.class);
         for (Element element : elementsAnnotatedWithProduce) {
             // validate
             if (element.getKind() != ElementKind.METHOD) {
-                Log.error("mlesiewski.simpleioc.Produce is only applicable for methods", element);
+                Logger.error("mlesiewski.simpleioc.Produce is only applicable for methods", element);
                 return true;
             }
             Set<Modifier> modifiers = element.getModifiers();
             if (modifiers.contains(Modifier.ABSTRACT)) {
-                Log.error("mlesiewski.simpleioc.Produce is only applicable for non-abstract methods", element);
+                Logger.error("mlesiewski.simpleioc.Produce is only applicable for non-abstract methods", element);
                 return true;
             }
             if (!modifiers.contains(Modifier.PUBLIC)) {
-                Log.error("mlesiewski.simpleioc.Produce is only applicable public methods", element);
+                Logger.error("mlesiewski.simpleioc.Produce is only applicable public methods", element);
                 return true;
             }
             if (modifiers.contains(Modifier.STATIC)) {
-                Log.error("mlesiewski.simpleioc.Produce is only applicable for non-static methods", element);
+                Logger.error("mlesiewski.simpleioc.Produce is only applicable for non-static methods", element);
                 return true;
             }
 

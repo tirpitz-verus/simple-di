@@ -4,7 +4,9 @@ import javax.annotation.processing.Messager;
 import javax.lang.model.element.Element;
 import javax.tools.Diagnostic;
 
-class Log {
+class Logger {
+
+    private static final String PREFIX = "mlesiewski.simpleioc.Logger ";
 
     private static Messager messager;
 
@@ -13,14 +15,14 @@ class Log {
     }
 
     static void error(String message, Element element) {
-        messager.printMessage(Diagnostic.Kind.ERROR, message, element);
+        messager.printMessage(Diagnostic.Kind.ERROR, PREFIX + message, element);
     }
 
     static void error(String message) {
-        messager.printMessage(Diagnostic.Kind.ERROR, message);
+        messager.printMessage(Diagnostic.Kind.ERROR, PREFIX + message);
     }
 
     static void note(String message) {
-        messager.printMessage(Diagnostic.Kind.NOTE, message);
+        messager.printMessage(Diagnostic.Kind.NOTE, PREFIX + message);
     }
 }

@@ -1,6 +1,6 @@
 package test.inject;
 
-import mlesiewski.simpleioc.scopes.Scope;
+import mlesiewski.simpleioc.scopes.ApplicationScope;
 import mlesiewski.simpleioc.annotations.Inject;
 
 public class FieldInjectionClient {
@@ -11,9 +11,9 @@ public class FieldInjectionClient {
     @Inject()
     BeanInjectedByType defaultScopeByType;
 
-    @Inject(name = "bean injected by name", scope = Scope.APP_SCOPE)
+    @Inject(name = "bean injected by name", scope = ApplicationScope.NAME)
     BeanInjectedByName scopedByName;
 
-    @Inject(scope = Scope.APP_SCOPE)
+    @Inject(scope = ApplicationScope.NAME)
     BeanInjectedByType scopedByType;
 }
