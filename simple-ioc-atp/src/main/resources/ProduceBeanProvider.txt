@@ -1,4 +1,4 @@
-package mlesiewski.simpleioc;
+package {{beanProviderPackage}};
 
 import javax.annotation.Generated;
 

@@ -12,6 +12,7 @@ public class ProviderForProduceGenerator extends BaseGenerator {
 
     private String returnTypeName;
     private String beanProviderSimpleName;
+    private String beanProviderPackage;
     private String producerTypeName;
     private String producerMethodName;
 
@@ -42,7 +43,9 @@ public class ProviderForProduceGenerator extends BaseGenerator {
         TypeMirror returnType = method.getReturnType();
         returnTypeName = returnType.toString();
         String beanProviderName = returnTypeName + "BeanProvider";
-        beanProviderSimpleName = beanProviderName.substring(beanProviderName.lastIndexOf("."));
+        int latDot = beanProviderName.lastIndexOf(".");
+        beanProviderSimpleName = beanProviderName.substring(latDot);
+        beanProviderPackage = beanProviderName.substring(0, latDot - 1);
         producerTypeName = element.getEnclosingElement().asType().toString();
         producerMethodName = element.getSimpleName().toString();
         return beanProviderName;
@@ -54,6 +57,7 @@ public class ProviderForProduceGenerator extends BaseGenerator {
         HashMap<String, String> params = new HashMap<>();
         params.put("returnTypeName", returnTypeName);
         params.put("beanProviderSimpleName", beanProviderSimpleName);
+        params.put("beanProviderPackage", beanProviderPackage);
         params.put("producerTypeName", producerTypeName);
         params.put("producerMethodName", producerMethodName);
         return produceBeanProvider.compile(params);
