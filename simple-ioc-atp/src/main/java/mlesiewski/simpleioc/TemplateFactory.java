@@ -10,6 +10,7 @@ import java.util.HashMap;
 public class TemplateFactory {
 
     private static final HashMap<String, Template> TEMPLATES = new HashMap<>();
+    public static final String EXTENSION = ".txt";
     private static Filer FILER;
 
     /** {@link Filer} is needed for getting resource files. */
@@ -35,10 +36,9 @@ public class TemplateFactory {
 
     /** Creates {@link Template}. */
     private static Template createTemplate(String name) throws IOException {
-        FileObject resource = FILER.getResource(StandardLocation.CLASS_PATH, "", name + ".txt");
+        FileObject resource = FILER.getResource(StandardLocation.CLASS_PATH, "", name + EXTENSION);
         CharSequence charContent = resource.getCharContent(false);
-        StringBuilder text = new StringBuilder(charContent);
-        return new Template(text);
+        return new Template(charContent.toString());
     }
 
 }
