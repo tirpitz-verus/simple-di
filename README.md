@@ -1,3 +1,3 @@
-# simple-ioc
+# simple-di
 
-a simple IoC library
+a simple dependency injection library
