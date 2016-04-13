@@ -10,28 +10,12 @@ import java.util.Set;
 
 public abstract class BaseGenerator {
 
-    final Set<String> created = new HashSet<>();
-    Element element;
-
-    public BaseGenerator(Element element) {
-        this.element = element;
-    }
-
     /** Creates java source files for {@link BeanProvider BeanProviders}. */
     public void generateCode(Filer filer) {
         validate();
         String className = newClassName();
-        if (alreadyCreated(className)) {
-            Logger.note("skipping creation of '" + className + "' - already created");
-        } else {
-            String text = getSourceCodeText();
-            writeClassFile(filer, text, className);
-        }
-    }
-
-    /** @return wether the type provided was already created */
-    public boolean alreadyCreated(String className) {
-        return created.contains(className);
+        String text = getSourceCodeText();
+        writeClassFile(filer, text, className);
     }
 
     /** @throws SimpleIocAptException if there is a problem with a given element */
@@ -51,7 +35,6 @@ public abstract class BaseGenerator {
             Writer writer = classFile.openWriter();
             writer.write(text);
             writer.close();
-            created.add(className);
         } catch (IOException e) {
             throw new SimpleIocAptException("could not write a class '" + className + "' file because: " + e.getMessage());
         }

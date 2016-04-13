@@ -1,10 +1,12 @@
 package mlesiewski.simpleioc;
 
-import mlesiewski.simpleioc.annotations.Produce;
+import mlesiewski.simpleioc.model.CodeGenerated;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.*;
+import javax.lang.model.element.TypeElement;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
@@ -14,7 +16,6 @@ import java.util.Set;
         "mlesiewski.simpleioc.annotations.Produce"
 })
 public class SimpleIocProcessor extends AbstractProcessor {
-
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -27,16 +28,12 @@ public class SimpleIocProcessor extends AbstractProcessor {
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         Logger.note("processing mlesiewski.simpleioc.annotations");
         try {
-            // 1. process @Produce annotations - create @Produce Providers in the first pass as not to overwrite them by generating their products
-            Set<? extends Element> produceElements = roundEnv.getElementsAnnotatedWith(Produce.class);
-            for (Element element : produceElements) {
-                Logger.note("processing element '" + element.getSimpleName() + "'");
-                BaseGenerator generator = new ProviderForProduceGenerator(element);
-                generator.generateCode(processingEnv.getFiler());
-            }
-            // 2. process @Bean annotations - creating Providers for them
-            // 3. if any of the @Produce Providers does not have a Provider in all scopes they use, then create these for them
-            // 4. process @Inject annotations  - creating Providers for them and their targets if none were created already
+            Map<String, CodeGenerated> beanClassesCollector = new HashMap<>();
+            // 1. process @Produce annotations - create @Produce Providers
+            ProduceAnnotationsProcessor.process(roundEnv, beanClassesCollector);
+            // 2. process @Bean annotations - creating Providers for them (if no producers)
+            // 3. process @Inject annotations  - creating Providers for them and their targets if none were created already
+            // 4. write source files
         } catch (SimpleIocAptException e) {
             if (e.hasElement()) {
                 Logger.error(e.getMessage(), e.getElement());

@@ -1,0 +1,15 @@
+package {{beanProviderPackage}};
+
+import javax.annotation.Generated;
+
+@Generated("mlesiewski.simpleioc.SimpleIocProcessor")
+class {{beanProviderSimpleName}} implements BeanProvider<{{beanType}}> {
+
+    static {
+        BeanRegistry.register(new {{beanProviderSimpleName}}(), {{beanName}});
+    }
+
+    public {{beanType}} produce() {
+        return new {{beanType}}();
+    }
+}

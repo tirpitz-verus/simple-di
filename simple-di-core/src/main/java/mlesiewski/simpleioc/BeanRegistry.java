@@ -68,4 +68,11 @@ public class BeanRegistry {
     public static <T> void register(BeanProvider<T> beanProvider, Class<T> beanProviderName) {
         DELEGATE.register(beanProvider, beanProviderName);
     }
+
+    /**
+     * @return name of the default scope
+     */
+    public static String defaultScope() {
+        return DELEGATE.DEFAULT_SCOPE;
+    }
 }
