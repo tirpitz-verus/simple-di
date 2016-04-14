@@ -1,6 +1,7 @@
 package mlesiewski.simpleioc.model;
 
 import mlesiewski.simpleioc.BeanRegistry;
+import mlesiewski.simpleioc.annotations._Default;
 
 import java.util.Objects;
 
@@ -9,9 +10,8 @@ import java.util.Objects;
  */
 public class BeanEntity {
 
-    private static final String DEFAULT_VALUE = "DEFAULT VALUE";
-    private String name = DEFAULT_VALUE;
-    private String scope = DEFAULT_VALUE;
+    private String name = _Default.VALUE;
+    private String scope = _Default.VALUE;
     private final ClassEntity classEntity;
 
     public BeanEntity(ClassEntity classEntity) {
@@ -25,7 +25,7 @@ public class BeanEntity {
     }
 
     public String name() {
-        return Objects.equals(name, DEFAULT_VALUE) ? typeName() : name;
+        return Objects.equals(name, _Default.VALUE) ? typeName() : name;
     }
 
     public void name(String name) {
@@ -33,7 +33,7 @@ public class BeanEntity {
     }
 
     public String scope() {
-        return Objects.equals(scope, DEFAULT_VALUE) ? BeanRegistry.defaultScope() : scope;
+        return Objects.equals(scope, _Default.VALUE) ? BeanRegistry.defaultScope() : scope;
     }
 
     public void scope(String scope) {

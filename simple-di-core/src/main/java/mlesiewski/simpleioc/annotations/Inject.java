@@ -14,8 +14,8 @@ public @interface Inject {
      * A {@link Scope} name from which this Bean should be injected.
      * If not specified then the default scope will be used.
      */
-    String scope() default "";
+    String scope() default _Default.VALUE;
 
     /** A name of {@link Bean} that is being injected. */
-    String name() default "";
+    String name() default _Default.VALUE;
 }

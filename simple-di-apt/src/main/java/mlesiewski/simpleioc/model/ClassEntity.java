@@ -9,14 +9,16 @@ public class ClassEntity {
 
     private final String packageName;
     private final String simpleName;
+    private final String typeName;
 
     /**
      * @param packageName package name of the represented class
      * @param simpleName simple name of the represented class
      */
-    public ClassEntity(String packageName, String simpleName) {
+    ClassEntity(String packageName, String simpleName) {
         this.packageName = packageName;
         this.simpleName = simpleName;
+        this.typeName = packageName + "." + simpleName;
     }
 
     /**
@@ -37,7 +39,7 @@ public class ClassEntity {
      * @return name of the represented class
      */
     public String typeName() {
-        return packageName() + "." + simpleName();
+        return typeName;
     }
 
     /**

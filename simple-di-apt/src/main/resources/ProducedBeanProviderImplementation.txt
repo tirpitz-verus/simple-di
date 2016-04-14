@@ -12,6 +12,6 @@ class {{beanProviderSimpleName}} implements BeanProvider<{{beanType}}> {
     }
 
     public {{beanType}} produce() {
-        return new {{beanType}}();
+        return BeanRegistry.getBean("{{beanProducerBeanName}}", "{{beanScope}}").{{beanProducerMethod}}();
     }
 }

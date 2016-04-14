@@ -44,7 +44,7 @@ class ProduceAnnotationsProcessor {
         ExecutableElement method = (ExecutableElement) element;
         BeanProviderEntity beanProvider = createBeanProducerProvider(annotation, method);
         generatedCollector.put(beanProvider.typeName(), beanProvider);
-        ProducedBeanProvider producedBeanProvider = createProducedBeanProvider(annotation, method, beanProvider);
+        ProducedBeanProviderEntity producedBeanProvider = createProducedBeanProvider(annotation, method, beanProvider);
         generatedCollector.put(producedBeanProvider.typeName(), producedBeanProvider);
     }
 
@@ -83,11 +83,11 @@ class ProduceAnnotationsProcessor {
     /**
      * @return bean provider that provides the produced bean - the one returned by {@link Produce} annotated method
      */
-    private ProducedBeanProvider createProducedBeanProvider(Produce annotation, ExecutableElement method, BeanProviderEntity beanProvider) {
+    private ProducedBeanProviderEntity createProducedBeanProvider(Produce annotation, ExecutableElement method, BeanProviderEntity beanProvider) {
         ClassEntity producedBeanClass = ClassEntity.from(method.getReturnType());
         BeanEntity producedBean = BeanEntity.builder().from(producedBeanClass).withScope(annotation.scope()).withName(annotation.name()).build();
         String producerMethod = method.getSimpleName().toString();
-        return new ProducedBeanProvider(producedBean, beanProvider.beanEntity(), producerMethod);
+        return new ProducedBeanProviderEntity(producedBean, beanProvider.beanEntity(), producerMethod);
     }
 
 }

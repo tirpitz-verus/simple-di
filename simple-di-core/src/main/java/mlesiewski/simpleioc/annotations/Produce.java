@@ -14,8 +14,8 @@ public @interface Produce {
      * A {@link Scope} name from which this Bean should be available.
      * If not specified then the default scope will be used.
      */
-    String scope() default "";
+    String scope() default _Default.VALUE;
 
     /** A name of {@link Bean} that is being produced. */
-    String name() default "";
+    String name() default _Default.VALUE;
 }
