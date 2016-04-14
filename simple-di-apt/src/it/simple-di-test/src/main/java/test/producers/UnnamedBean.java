@@ -1,6 +1,6 @@
 package test.producers;
 
-import mlesiewski.simpleioc.annotations.Bean;
+import mlesiewski.simpledi.annotations.Bean;
 
 @Bean
 public class UnnamedBean {

@@ -1,7 +1,7 @@
 package test.inject;
 
-import mlesiewski.simpleioc.BeanRegistry;
-import mlesiewski.simpleioc.SimpleIocException;
+import mlesiewski.simpledi.BeanRegistry;
+import mlesiewski.simpledi.SimpleDiException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -14,7 +14,7 @@ public class TwoConstructorsInjectionClientTest {
     @Test
     public void exceptionThrowOnTooManyConstructors() throws Exception {
         // given
-        thrown.expect(SimpleIocException.class);
+        thrown.expect(SimpleDiException.class);
         thrown.expectMessage("too many contructors");
         thrown.expectMessage("only one constructor");
         // when

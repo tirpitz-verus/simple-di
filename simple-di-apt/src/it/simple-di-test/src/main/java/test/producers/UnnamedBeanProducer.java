@@ -1,7 +1,7 @@
 package test.producers;
 
-import mlesiewski.simpleioc.scopes.ApplicationScope;
-import mlesiewski.simpleioc.annotations.Produce;
+import mlesiewski.simpledi.scopes.ApplicationScope;
+import mlesiewski.simpledi.annotations.Produce;
 
 public class UnnamedBeanProducer {
 

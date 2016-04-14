@@ -1,6 +1,6 @@
 package test.inject;
 
-import mlesiewski.simpleioc.annotations.Inject;
+import mlesiewski.simpledi.annotations.Inject;
 
 import java.util.UUID;
 

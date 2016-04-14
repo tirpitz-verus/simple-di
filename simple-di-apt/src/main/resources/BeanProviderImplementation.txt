@@ -1,10 +1,10 @@
 package {{beanProviderPackage}};
 
 import javax.annotation.Generated;
-import mlesiewski.simpleioc.BeanProvider;
-import mlesiewski.simpleioc.BeanRegistry;
+import mlesiewski.simpledi.BeanProvider;
+import mlesiewski.simpledi.BeanRegistry;
 
-@Generated("mlesiewski.simpleioc.SimpleIocProcessor")
+@Generated("mlesiewski.simpledi.SimpleDiProcessor")
 class {{beanProviderSimpleName}} implements BeanProvider<{{beanType}}> {
 
     static {

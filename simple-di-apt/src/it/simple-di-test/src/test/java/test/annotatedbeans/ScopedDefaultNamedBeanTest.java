@@ -1,6 +1,6 @@
 package test.annotatedbeans;
 
-import mlesiewski.simpleioc.BeanRegistry;
+import mlesiewski.simpledi.BeanRegistry;
 import org.junit.Test;
 
 import java.util.UUID;

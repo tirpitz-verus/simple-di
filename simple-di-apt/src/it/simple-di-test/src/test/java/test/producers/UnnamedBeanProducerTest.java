@@ -1,6 +1,6 @@
 package test.producers;
 
-import mlesiewski.simpleioc.BeanRegistry;
+import mlesiewski.simpledi.BeanRegistry;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
