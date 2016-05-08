@@ -31,6 +31,15 @@ class BeanRegistryImpl {
     }
 
     /**
+     * Calls {@link #getBean(String,String)}.
+     *
+     * @return a bean instance
+     */
+    <T> T getBean(Class aClass, String scopeName) {
+        return getBean(aClass.getName(), scopeName);
+    }
+
+    /**
      * Calls {@link #getBean(String)}.
      *
      * @return a bean instance
@@ -38,6 +47,7 @@ class BeanRegistryImpl {
     <T> T getBean(Class aClass) {
         return getBean(aClass.getName());
     }
+
 
     /**
      * Calls {@link #getBean(String, String)} with a default scope name.
@@ -63,7 +73,7 @@ class BeanRegistryImpl {
      * @param scopeName        name of the {@link Scope} to register this provider with
      */
     <T> void register(BeanProvider<T> beanProvider, String beanProviderName, String scopeName) {
-        LOGGER.trace("getBean({}, {}, {})", beanProvider, beanProviderName, scopeName);
+        LOGGER.trace("register({}, {}, {})", beanProvider, beanProviderName, scopeName);
         if (beanProviderName == null) {
             throw new SimpleDiException("Cannot register a BeanProvider with a null name");
         }
