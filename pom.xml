@@ -12,7 +12,8 @@
 	<modules>
         <module>simple-di-core</module>
         <module>simple-di-apt</module>
-	</modules>
+        <module>simple-di-test</module>
+    </modules>
 
 	<dependencyManagement>
 		<dependencies>
