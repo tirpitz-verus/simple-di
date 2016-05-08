@@ -1,9 +1,10 @@
 package test.inject;
 
 import mlesiewski.simpledi.BeanRegistry;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 public class DifferentFieldAccessLevelsTest {
 
@@ -12,7 +13,7 @@ public class DifferentFieldAccessLevelsTest {
         // when
         PrivateFieldAccessLevelsClient injectionClient = BeanRegistry.getBean(PrivateFieldAccessLevelsClient.class);
         // then
-        assertEquals(BeanInjectedByType.CALL_UUID, injectionClient.call());
+        assertThat(injectionClient.call(), is(BeanInjectedByType.CALL_UUID));
     }
 
     @Test
@@ -20,7 +21,7 @@ public class DifferentFieldAccessLevelsTest {
         // when
         DefaultFieldAccessLevelsClient injectionClient = BeanRegistry.getBean(DefaultFieldAccessLevelsClient.class);
         // then
-        assertEquals(BeanInjectedByType.CALL_UUID, injectionClient.call());
+        assertThat(injectionClient.call(), is(BeanInjectedByType.CALL_UUID));
     }
 
     @Test
@@ -28,7 +29,7 @@ public class DifferentFieldAccessLevelsTest {
         // when
         ProtectedFieldAccessLevelsClient injectionClient = BeanRegistry.getBean(ProtectedFieldAccessLevelsClient.class);
         // then
-        assertEquals(BeanInjectedByType.CALL_UUID, injectionClient.call());
+        assertThat(injectionClient.call(), is(BeanInjectedByType.CALL_UUID));
     }
 
     @Test
@@ -36,6 +37,6 @@ public class DifferentFieldAccessLevelsTest {
         // when
         PublicFieldAccessLevelsClient injectionClient = BeanRegistry.getBean(PublicFieldAccessLevelsClient.class);
         // then
-        assertEquals(BeanInjectedByType.CALL_UUID, injectionClient.call());
+        assertThat(injectionClient.call(), is(BeanInjectedByType.CALL_UUID));
     }
 }

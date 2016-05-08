@@ -1,11 +1,14 @@
 package test.inject;
 
 import mlesiewski.simpledi.BeanRegistry;
-import org.junit.Test;
 
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+
+import org.testng.annotations.Test;
+
 
 public class FieldInjectionClientTest {
 
@@ -19,9 +22,9 @@ public class FieldInjectionClientTest {
         UUID scopedByNameActual = injectionClient.scopedByName.call();
         UUID scopedByTypeActual = injectionClient.scopedByType.call();
         // then
-        assertEquals(BeanInjectedByName.CALL_UUID, defaultScopeByNameActual);
-        assertEquals(BeanInjectedByName.CALL_UUID, scopedByNameActual);
-        assertEquals(BeanInjectedByType.CALL_UUID, defaultScopeByTypeActual);
-        assertEquals(BeanInjectedByType.CALL_UUID, scopedByTypeActual);
+        assertThat(defaultScopeByNameActual, is(BeanInjectedByName.CALL_UUID));
+        assertThat(scopedByNameActual, is(BeanInjectedByName.CALL_UUID));
+        assertThat(defaultScopeByTypeActual, is(BeanInjectedByType.CALL_UUID));
+        assertThat(scopedByTypeActual, is(BeanInjectedByType.CALL_UUID));
     }
 }

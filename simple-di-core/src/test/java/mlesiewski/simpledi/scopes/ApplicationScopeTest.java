@@ -5,7 +5,9 @@ import mlesiewski.simpledi.SimpleDiException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.testng.Assert.assertTrue;
 
 public class ApplicationScopeTest {
 
@@ -47,7 +49,7 @@ public class ApplicationScopeTest {
         // when
         String bean = applicationScope.getBean(name);
         // then
-        assertEquals(name, bean);
+        assertThat(bean, is(name));
     }
 
     @BeforeMethod

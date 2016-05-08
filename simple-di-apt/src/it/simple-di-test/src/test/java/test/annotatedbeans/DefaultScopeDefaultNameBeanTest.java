@@ -1,11 +1,12 @@
 package test.annotatedbeans;
 
 import mlesiewski.simpledi.BeanRegistry;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 public class DefaultScopeDefaultNameBeanTest {
 
@@ -16,6 +17,6 @@ public class DefaultScopeDefaultNameBeanTest {
         // when
         UUID actual = bean.call();
         // then
-        assertEquals(DefaultScopeDefaultNameBean.CALL_UUID, actual);
+        assertThat(actual, is(DefaultScopeDefaultNameBean.CALL_UUID));
     }
 }

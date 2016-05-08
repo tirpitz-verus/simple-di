@@ -2,23 +2,14 @@ package test.inject;
 
 import mlesiewski.simpledi.BeanRegistry;
 import mlesiewski.simpledi.SimpleDiException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.testng.annotations.Test;
 
 public class TwoConstructorsInjectionClientTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
-    @Test
+    @Test(expectedExceptions = SimpleDiException.class, expectedExceptionsMessageRegExp = ".*(too many constructors|only one constructor)+.*")
     public void exceptionThrowOnTooManyConstructors() throws Exception {
-        // given
-        thrown.expect(SimpleDiException.class);
-        thrown.expectMessage("too many contructors");
-        thrown.expectMessage("only one constructor");
         // when
-        TwoConstructorsInjectionClient injectionClient = BeanRegistry.getBean(TwoConstructorsInjectionClient.class);
+        BeanRegistry.getBean(TwoConstructorsInjectionClient.class);
         // then - exception
     }
 }

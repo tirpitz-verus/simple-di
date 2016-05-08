@@ -1,9 +1,10 @@
 package test.producers;
 
 import mlesiewski.simpledi.BeanRegistry;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 public class UnnamedBeanProducerTest {
 
@@ -12,7 +13,7 @@ public class UnnamedBeanProducerTest {
         // when
         InjectionClient client = BeanRegistry.getBean(InjectionClient.class);
         // then
-        assertEquals(UnnamedBeanProducer.UNNAMED, client.unnamedBean.name);
+        assertThat(client.unnamedBean.name, is(UnnamedBeanProducer.UNNAMED));
     }
 
     @Test
@@ -20,7 +21,7 @@ public class UnnamedBeanProducerTest {
         // when
         InjectionClient client = BeanRegistry.getBean(InjectionClient.class);
         // then
-        assertEquals(UnnamedBeanProducer.NAMED_A, client.namedBeanA.name);
+        assertThat(client.namedBeanA.name, is(UnnamedBeanProducer.NAMED_A));
     }
 
     @Test
@@ -28,7 +29,7 @@ public class UnnamedBeanProducerTest {
         // when
         InjectionClient client = BeanRegistry.getBean(InjectionClient.class);
         // then
-        assertEquals(UnnamedBeanProducer.NAMED_B, client.namedBeanB.name);
+        assertThat(client.namedBeanB.name, is(UnnamedBeanProducer.NAMED_B));
     }
 
     @Test
@@ -36,6 +37,6 @@ public class UnnamedBeanProducerTest {
         // when
         InjectionClient client = BeanRegistry.getBean(InjectionClient.class);
         // then
-        assertEquals(UnnamedBeanProducer.SCOPED_UNNAMED, client.scopedUnnamedBean.name);
+        assertThat(client.scopedUnnamedBean.name, is(UnnamedBeanProducer.SCOPED_UNNAMED));
     }
 }

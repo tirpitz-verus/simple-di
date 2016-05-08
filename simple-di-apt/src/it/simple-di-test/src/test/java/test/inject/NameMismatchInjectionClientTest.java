@@ -2,25 +2,15 @@ package test.inject;
 
 import mlesiewski.simpledi.BeanRegistry;
 import mlesiewski.simpledi.SimpleDiException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.testng.annotations.Test;
+
 
 public class NameMismatchInjectionClientTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
-    @Test
+    @Test(expectedExceptions = SimpleDiException.class, expectedExceptionsMessageRegExp = ".*(name mismatch|BeanInjectedByType|BeanInjectedByName|bean injected by name)+.*")
     public void exceptionThrowOnBeanNameMismatch() throws Exception {
-        // given
-        thrown.expect(SimpleDiException.class);
-        thrown.expectMessage("name mismatch");
-        thrown.expectMessage("BeanInjectedByType");
-        thrown.expectMessage("BeanInjectedByName");
-        thrown.expectMessage("bean injected by name");
         // when
-        NameMismatchInjectionClient injectionClient = BeanRegistry.getBean(NameMismatchInjectionClient.class);
+        BeanRegistry.getBean(NameMismatchInjectionClient.class);
         // then - exception
     }
 }

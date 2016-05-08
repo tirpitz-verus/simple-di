@@ -5,7 +5,9 @@ import org.testng.annotations.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+
 
 public class TemplateTest {
 
@@ -19,7 +21,7 @@ public class TemplateTest {
         // when
         String actual = template.compile(input);
         // then
-        assertEquals("text text text text text", actual);
+        assertThat(actual, is("text text text text text"));
     }
 
     @Test(expectedExceptions = SimpleDiAptException.class)
