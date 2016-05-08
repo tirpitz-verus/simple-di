@@ -14,9 +14,8 @@ public class BeanRegistryTest {
     @Test
     public void canRetrieveABeanFormARegisteredProviderInDefaultScope() throws Exception {
         // given
-        BeanProvider<Object> provider = testBeanProvider();
         Class<Object> name = Object.class;
-        BeanRegistry.register(provider, name);
+        BeanRegistry.register(Object::new, name);
         //when
         Object bean = BeanRegistry.getBean(name);
         // then
@@ -26,9 +25,8 @@ public class BeanRegistryTest {
     @Test
     public void canRetrieveABeanFormARegisteredProviderInScope() throws Exception {
         // given
-        BeanProvider<Object> provider = testBeanProvider();
         Class<Object> name = Object.class;
-        BeanRegistry.register(provider, name);
+        BeanRegistry.register(Object::new, name);
         //when
         Object bean = BeanRegistry.getBean(name);
         // then
@@ -38,11 +36,10 @@ public class BeanRegistryTest {
     @Test(expectedExceptions = SimpleDiException.class)
     public void throwsExceptionIfBeanProviderRegisteredTwice() throws Exception {
         // given
-        BeanProvider<Object> provider = testBeanProvider();
         Class<Object> name = Object.class;
-        BeanRegistry.register(provider, name);
+        BeanRegistry.register(Object::new, name);
         //when
-        BeanRegistry.register(provider, name);
+        BeanRegistry.register(Object::new, name);
         // then - error
     }
 
@@ -55,24 +52,9 @@ public class BeanRegistryTest {
 
     @Test(expectedExceptions = SimpleDiException.class)
     public void throwsExceptionIfRegisteringUnderNullName() throws Exception {
-        // given
-        BeanProvider<Object> provider = testBeanProvider();
         //when
-        BeanRegistry.register(provider, (String) null);
+        BeanRegistry.register(Object::new, (String) null);
         // then - error
-    }
-
-    private BeanProvider<Object> testBeanProvider() {
-        return new BeanProvider<Object>() {
-            @Override
-            public Object provide() {
-                return new Object();
-            }
-
-            @Override
-            public void scopeEnded() {
-            }
-        };
     }
 
     @BeforeMethod

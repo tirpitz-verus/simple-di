@@ -105,6 +105,5 @@ class DefaultScopeImpl implements Scope {
     public void end() {
         LOGGER.trace("end() on scope '{}'", name);
         started = false;
-        providers.values().forEach(BeanProvider::scopeEnded);
     }
 }

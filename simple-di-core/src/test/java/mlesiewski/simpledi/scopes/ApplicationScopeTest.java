@@ -29,7 +29,10 @@ public class ApplicationScopeTest {
     @Test
     public void registerCallsProviderImmediately() throws Exception {
         // given
-        BeanProvider<Object> provider = getTestProvider();
+        BeanProvider<Object> provider = () -> {
+            providerCalled = true;
+            return new Object();
+        };
         // when
         applicationScope.register(provider, "name");
         // then
@@ -50,21 +53,5 @@ public class ApplicationScopeTest {
     @BeforeMethod
     public void setUp() throws Exception {
         applicationScope = new ApplicationScope();
-    }
-
-    private BeanProvider<Object> getTestProvider() {
-        return new BeanProvider<Object>() {
-
-            @Override
-            public Object provide() {
-                providerCalled = true;
-                return new Object();
-            }
-
-            @Override
-            public void scopeEnded() {
-
-            }
-        };
     }
 }

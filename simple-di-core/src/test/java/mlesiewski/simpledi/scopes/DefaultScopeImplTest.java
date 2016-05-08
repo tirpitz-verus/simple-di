@@ -1,6 +1,5 @@
 package mlesiewski.simpledi.scopes;
 
-import mlesiewski.simpledi.BeanProvider;
 import mlesiewski.simpledi.SimpleDiException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -10,13 +9,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
 
 public class DefaultScopeImplTest {
 
     static final Object BEAN = new Object();
     DefaultScopeImpl scope;
-    boolean scopeEnded = false;
     int timesBeanWasProvided = 0;
 
     @Test
@@ -33,7 +30,7 @@ public class DefaultScopeImplTest {
     public void hasARegisteredBeanWhenStated() throws Exception {
         // given
         String name = "registered";
-        scope.register(testBeanProvider(), name);
+        scope.register(Object::new, name);
         scope.start();
         // when
         boolean hasBean = scope.hasBean(name);
@@ -54,7 +51,7 @@ public class DefaultScopeImplTest {
     public void throwsExceptionIfGettingBeanAndNotStarted() throws Exception {
         // given
         String name = "registered";
-        scope.register(testBeanProvider(), name);
+        scope.register(Object::new, name);
         scope.end();
         // when
         scope.getBean(name);
@@ -65,7 +62,7 @@ public class DefaultScopeImplTest {
     public void returnsRegisteredBeanWhenStated() throws Exception {
         // given
         String name = "registered";
-        scope.register(testBeanProvider(), name);
+        scope.register(() -> BEAN, name);
         scope.start();
         // when
         Object bean = scope.getBean(name);
@@ -77,7 +74,7 @@ public class DefaultScopeImplTest {
     public void doesNotHaveARegisteredBeanWhenNotStated() throws Exception {
         // given
         String name = "registered";
-        scope.register(testBeanProvider(), name);
+        scope.register(Object::new, name);
         scope.end();
         // when
         boolean hasBean = scope.hasBean(name);
@@ -86,21 +83,11 @@ public class DefaultScopeImplTest {
     }
 
     @Test
-    public void notifiesAllProvidersAboutScopeEnding() throws Exception {
-        // given
-        scope.register(testBeanProvider(), "whatever");
-        // when
-        scope.end();
-        // then
-        assertTrue(scopeEnded);
-    }
-
-    @Test
     public void providerIsNotCalledIfBeanIsInCache(){
         // given
         String name = "bean";
         scope.beanCache.put(name, BEAN);
-        scope.register(testBeanProvider(), name);
+        scope.register(() -> BEAN, name);
         scope.start();
         // when
         scope.getBean(name);
@@ -122,24 +109,9 @@ public class DefaultScopeImplTest {
         assertThat(bean, is(not(nullValue())));
     }
 
-    private BeanProvider<Object> testBeanProvider() {
-        return new BeanProvider<Object>() {
-            @Override
-            public Object provide() {
-                return BEAN;
-            }
-
-            @Override
-            public void scopeEnded() {
-                scopeEnded = true;
-            }
-        };
-    }
-
     @BeforeMethod
     public void setUp() throws Exception {
         scope = new DefaultScopeImpl("default");
-        scopeEnded = false;
         timesBeanWasProvided = 0;
     }
 }
