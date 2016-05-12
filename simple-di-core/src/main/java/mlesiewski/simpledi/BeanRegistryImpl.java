@@ -16,7 +16,10 @@ class BeanRegistryImpl {
     final HashMap<String, Scope> scopes;
     final String DEFAULT_SCOPE;
 
-    /** Constructs a new instance initialized with "appScope" and "toggleScope". */
+    /**
+     * Constructs a new instance initialized with "appScope" and "toggleScope".
+     * Might call {@link Bootstrapper#bootstrap()}.
+     */
     BeanRegistryImpl() {
         LOGGER.debug("instantiating BeanRegistryImpl");
         scopes = new HashMap<>();

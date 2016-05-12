@@ -7,12 +7,12 @@ import mlesiewski.simpledi.model.ProducedBeanProviderEntity;
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
+import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
+import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes({
@@ -32,14 +32,18 @@ public class SimpleDiProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         Logger.note("processing mlesiewski.simpledi.annotations");
+        Logger.note("roundEnv.processingOver() " + roundEnv.processingOver());
         try {
-            Map<String, CodeGenerated> codeGeneratedCollector = new HashMap<>();
+            // order does matter
+            Map<String, CodeGenerated> codeGeneratedCollector = new LinkedHashMap<>();
             // 1. process @Produce annotations - create @Produce Providers
             ProduceAnnotationsProcessor.process(roundEnv, codeGeneratedCollector);
             // 2. process @Bean annotations - creating Providers for them (if no producers)
-            // 3. process @Inject annotations  - creating Providers for them and their targets if none were created already
+            // 3. process @Inject annotations - creating Providers for them and their targets if none were created already
             // 4. write source files
             codeGeneratedCollector.values().forEach(this::write);
+            // 5. write service loader file
+            write(codeGeneratedCollector.values());
         } catch (SimpleDiAptException e) {
             if (e.hasElement()) {
                 Logger.error(e.getMessage(), e.getElement());
@@ -52,9 +56,31 @@ public class SimpleDiProcessor extends AbstractProcessor {
         return true;
     }
 
+    // todo refactor this into something
+    private Writer writer = null;
+    private void write(Collection<CodeGenerated> values) {
+        StandardLocation location = StandardLocation.CLASS_OUTPUT;
+        String pkg = "";
+        String relativeName = "META-INF/services/mlesiewski.simpledi.annotations.Registerable";
+        Logger.note("attempting to write to a resource file '" + relativeName + "'");
+        try {
+            if (writer == null) {
+                FileObject resource = processingEnv.getFiler().createResource(location, pkg, relativeName);
+                writer = resource.openWriter();
+            }
+            for (CodeGenerated generated : values) {
+                writer.write(generated.typeName());
+                writer.write(System.lineSeparator());
+            }
+            writer.flush();
+        } catch (IOException e) {
+            throw new SimpleDiAptException("could not write a file '" + relativeName + "' because: " + e.getMessage());
+        }
+    }
+
     // todo poc - change to some more sensible implementation
     private void write(CodeGenerated generated) {
-        Logger.note("attempting to create source file for '" + generated.typeName() + "'");
+        Logger.note("attempting to create a source file for '" + generated.typeName() + "'");
         try {
             JavaFileObject classFile = processingEnv.getFiler().createSourceFile(generated.typeName());
             Writer writer = classFile.openWriter();
@@ -90,4 +116,5 @@ public class SimpleDiProcessor extends AbstractProcessor {
             throw new SimpleDiAptException("could not write a class '" + generated.typeName() + "' file because: " + e.getMessage());
         }
     }
+
 }

@@ -1,6 +1,7 @@
 package mlesiewski.simpledi;
 
 import mlesiewski.simpledi.annotations.Produce;
+import mlesiewski.simpledi.annotations._Default;
 import mlesiewski.simpledi.model.*;
 
 import javax.annotation.processing.RoundEnvironment;
@@ -68,6 +69,11 @@ class ProduceAnnotationsProcessor {
         if (modifiers.contains(Modifier.STATIC)) {
             throw new SimpleDiAptException(Produce.class.getName() + " is only applicable for non-static methods", element);
         }
+        Produce annotation = element.getAnnotation(Produce.class);
+        BeanNameValidator validator = new BeanNameValidator();
+        if (!_Default.VALUE.equals(annotation.name()) && !validator.isAValidName(annotation.name())) {
+            throw new SimpleDiAptException(Produce.class.getName() + " has an invalid bean name (" + annotation.name() + ")", element);
+        }
     }
 
     /***
@@ -87,6 +93,7 @@ class ProduceAnnotationsProcessor {
         ClassEntity producedBeanClass = ClassEntity.from(method.getReturnType());
         BeanEntity producedBean = BeanEntity.builder().from(producedBeanClass).withScope(annotation.scope()).withName(annotation.name()).build();
         String producerMethod = method.getSimpleName().toString();
+        // todo jego nazwa typu to nazwa beanEntity z beanProvidera a nie z adnotacji
         return new ProducedBeanProviderEntity(producedBean, beanProvider.beanEntity(), producerMethod);
     }
 

@@ -5,10 +5,10 @@ import mlesiewski.simpledi.annotations.Produce;
 
 public class UnnamedBeanProducer {
 
-    public static final String UNNAMED = "unnamed bean";
-    public static final String SCOPED_UNNAMED = "scoped unnamed bean";
-    public static final String NAMED_A = "named a";
-    public static final String NAMED_B = "named b";
+    public static final String UNNAMED = "unnamed_bean";
+    public static final String SCOPED_UNNAMED = "scoped_unnamed_bean";
+    public static final String NAMED_A = "named_a";
+    public static final String NAMED_B = "named_b";
 
     @Produce
     public UnnamedBean produceUnnamedBean() {

@@ -14,7 +14,7 @@ public class ProducedBeanProviderEntity extends BeanProviderEntity implements Co
      * @param producerMethod name of the method of beanProducer that produces producedBean instances
      */
     public ProducedBeanProviderEntity(BeanEntity producedBean, BeanEntity beanProducer, String producerMethod) {
-        super(beanProducer.packageName(), beanProducer.simpleName() + "Wrapper", producedBean);
+        super(producedBean.packageName(), (producedBean.defaultName() ? producedBean.simpleName() : producedBean.name()) + "Wrapper", producedBean);
         this.beanProducer = beanProducer;
         this.producerMethod = producerMethod;
     }

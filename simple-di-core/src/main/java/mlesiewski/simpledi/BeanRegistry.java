@@ -4,13 +4,26 @@ import mlesiewski.simpledi.annotations.Bean;
 import mlesiewski.simpledi.scopes.Scope;
 
 /** A class for getting beans from. It actually a static interface to the {@link BeanRegistryImpl}. */
-public class BeanRegistry {
+public final class BeanRegistry {
+
+    static {
+        init();
+    }
 
     /** only one instance */
-    static final BeanRegistryImpl DELEGATE = new BeanRegistryImpl();
+    static BeanRegistryImpl DELEGATE;
 
     /** No you can't. */
     private BeanRegistry() {
+    }
+
+    /**
+     * Creates new {@link BeanRegistryImpl} instance and calls {@link Bootstrapper#bootstrap()}.
+     * Gets called in the static initializer.
+     */
+    static void init() {
+        DELEGATE = new BeanRegistryImpl();
+        Bootstrapper.bootstrap();
     }
 
     /**
