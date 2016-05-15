@@ -3,7 +3,7 @@ package mlesiewski.simpledi.model;
 /**
  * An entity representing a class implementing BeanProvider interface.
  */
-public class BeanProviderEntity extends ClassEntity implements CodeGenerated {
+public class BeanProviderEntity extends ClassEntity implements GeneratedCode {
 
     private final BeanEntity beanEntity;
 

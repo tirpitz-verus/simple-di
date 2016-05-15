@@ -22,16 +22,16 @@ class ProduceAnnotationsProcessor {
      * Process @Produce annotations - creates @Produce Providers.
      *
      * @param roundEnv           environment to get annotated {@link Element Elements} from
-     * @param generatedCollector new {@link CodeGenerated} classes will be added here
+     * @param generatedCollector new {@link GeneratedCode} classes will be added here
      */
-    static void process(RoundEnvironment roundEnv, Map<String, CodeGenerated> generatedCollector) {
+    static void process(RoundEnvironment roundEnv, Map<String, GeneratedCode> generatedCollector) {
         ProduceAnnotationsProcessor processor = new ProduceAnnotationsProcessor(generatedCollector);
         roundEnv.getElementsAnnotatedWith(Produce.class).forEach(processor::processElement);
     }
 
-    private final Map<String, CodeGenerated> generatedCollector;
+    private final Map<String, GeneratedCode> generatedCollector;
 
-    ProduceAnnotationsProcessor(Map<String, CodeGenerated> generatedCollector) {
+    ProduceAnnotationsProcessor(Map<String, GeneratedCode> generatedCollector) {
         this.generatedCollector = generatedCollector;
     }
 

@@ -3,7 +3,7 @@ package mlesiewski.simpledi.model;
 /**
  * An entity representing BeanProvider that delegates calls to a BeanProducer method.
  */
-public class ProducedBeanProviderEntity extends BeanProviderEntity implements CodeGenerated {
+public class ProducedBeanProviderEntity extends BeanProviderEntity implements GeneratedCode {
 
     private final BeanEntity beanProducer;
     private final String producerMethod;
