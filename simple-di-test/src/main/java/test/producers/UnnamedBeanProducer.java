@@ -1,7 +1,7 @@
 package test.producers;
 
-import mlesiewski.simpledi.scopes.ApplicationScope;
 import mlesiewski.simpledi.annotations.Produce;
+import test.util.TestScope;
 
 public class UnnamedBeanProducer {
 
@@ -25,7 +25,7 @@ public class UnnamedBeanProducer {
         return new UnnamedBean(NAMED_B);
     }
 
-    @Produce(scope = ApplicationScope.NAME)
+    @Produce(scope = TestScope.NAME)
     UnnamedBean produceScopedUnnamedBean() {
         return new UnnamedBean(SCOPED_UNNAMED);
     }

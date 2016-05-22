@@ -1,11 +1,11 @@
 package test.annotatedbeans;
 
-import mlesiewski.simpledi.scopes.ApplicationScope;
 import mlesiewski.simpledi.annotations.Bean;
+import test.util.TestScope;
 
 import java.util.UUID;
 
-@Bean(scope = ApplicationScope.NAME, name = "scoped named bean")
+@Bean(scope = TestScope.NAME, name = "scoped_named_bean")
 public class ScopedNamedBean {
 
     public static final UUID CALL_UUID = UUID.randomUUID();

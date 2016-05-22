@@ -3,9 +3,7 @@ package mlesiewski.simpledi;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 public class BeanNameValidatorTest {
 
@@ -32,5 +30,4 @@ public class BeanNameValidatorTest {
                 {"1111", true},
         };
     }
-
 }

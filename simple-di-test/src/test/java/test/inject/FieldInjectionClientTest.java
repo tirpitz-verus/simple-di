@@ -9,7 +9,6 @@ import static org.hamcrest.core.Is.is;
 
 import org.testng.annotations.Test;
 
-
 public class FieldInjectionClientTest {
 
     @Test

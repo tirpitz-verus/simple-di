@@ -3,6 +3,7 @@ package mlesiewski.simpledi;
 import mlesiewski.simpledi.annotations.Produce;
 import mlesiewski.simpledi.annotations._Default;
 import mlesiewski.simpledi.model.*;
+import mlesiewski.simpledi.scopes.ApplicationScope;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
@@ -10,7 +11,6 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeMirror;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -24,14 +24,14 @@ class ProduceAnnotationsProcessor {
      * @param roundEnv           environment to get annotated {@link Element Elements} from
      * @param generatedCollector new {@link GeneratedCode} classes will be added here
      */
-    static void process(RoundEnvironment roundEnv, Map<String, GeneratedCode> generatedCollector) {
+    static void process(RoundEnvironment roundEnv, GeneratedCodeCollector generatedCollector) {
         ProduceAnnotationsProcessor processor = new ProduceAnnotationsProcessor(generatedCollector);
         roundEnv.getElementsAnnotatedWith(Produce.class).forEach(processor::processElement);
     }
 
-    private final Map<String, GeneratedCode> generatedCollector;
+    private final GeneratedCodeCollector generatedCollector;
 
-    ProduceAnnotationsProcessor(Map<String, GeneratedCode> generatedCollector) {
+    ProduceAnnotationsProcessor(GeneratedCodeCollector generatedCollector) {
         this.generatedCollector = generatedCollector;
     }
 
@@ -43,16 +43,16 @@ class ProduceAnnotationsProcessor {
         validate(element);
         Produce annotation = element.getAnnotation(Produce.class);
         ExecutableElement method = (ExecutableElement) element;
-        BeanProviderEntity beanProvider = createBeanProducerProvider(annotation, method);
-        generatedCollector.put(beanProvider.typeName(), beanProvider);
+        BeanProviderEntity beanProvider = createBeanProducerProvider(method);
+        generatedCollector.registrable(beanProvider);
         ProducedBeanProviderEntity producedBeanProvider = createProducedBeanProvider(annotation, method, beanProvider);
-        generatedCollector.put(producedBeanProvider.typeName(), producedBeanProvider);
+        generatedCollector.registrable(producedBeanProvider);
     }
 
     /**
      * @param element annotated element to validate - was the annotation applied to the right place?
      */
-    public void validate(Element element) {
+    void validate(Element element) {
         if (element.getKind() != ElementKind.METHOD) {
             throw new SimpleDiAptException(Produce.class.getName() + " is only applicable for methods", element);
         }
@@ -79,10 +79,10 @@ class ProduceAnnotationsProcessor {
     /***
      * @return bean provider that provides a bean producer - the one with {@link Produce} annotated method
      */
-    private BeanProviderEntity createBeanProducerProvider(Produce annotation, ExecutableElement method) {
+    private BeanProviderEntity createBeanProducerProvider(ExecutableElement method) {
         TypeMirror beanProducerType = method.getEnclosingElement().asType();
         ClassEntity beanProducerClass = ClassEntity.from(beanProducerType);
-        BeanEntity beanProducer = BeanEntity.builder().from(beanProducerClass).withScope(annotation.scope()).build();
+        BeanEntity beanProducer = BeanEntity.builder().from(beanProducerClass).build();
         return new BeanProviderEntity(beanProducer);
     }
 
@@ -93,7 +93,6 @@ class ProduceAnnotationsProcessor {
         ClassEntity producedBeanClass = ClassEntity.from(method.getReturnType());
         BeanEntity producedBean = BeanEntity.builder().from(producedBeanClass).withScope(annotation.scope()).withName(annotation.name()).build();
         String producerMethod = method.getSimpleName().toString();
-        // todo jego nazwa typu to nazwa beanEntity z beanProvidera a nie z adnotacji
         return new ProducedBeanProviderEntity(producedBean, beanProvider.beanEntity(), producerMethod);
     }
 

@@ -1,26 +1,26 @@
 package mlesiewski.simpledi;
 
-import mlesiewski.simpledi.model.GeneratedCode;
+import mlesiewski.simpledi.model.GeneratedCodeCollector;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Set;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes({
         "mlesiewski.simpledi.annotations.Bean",
         "mlesiewski.simpledi.annotations.Inject",
-        "mlesiewski.simpledi.annotations.Produce"
+        "mlesiewski.simpledi.annotations.Produce",
+        "mlesiewski.simpledi.annotations.CustomScope"
 })
 public class SimpleDiProcessor extends AbstractProcessor {
 
     private static final boolean ANNOTATIONS_CLAIMED = true;
 
     private GeneratedCodeWriter codeWriter;
-    private Map<String, GeneratedCode> codeGeneratedCollector = new LinkedHashMap<>();
+    private GeneratedCodeCollector collector = new GeneratedCodeCollector();
+    private CustomScopeAnnotationProcessor customScopeAnnotationProcessor = new CustomScopeAnnotationProcessor();
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -35,14 +35,18 @@ public class SimpleDiProcessor extends AbstractProcessor {
         Logger.note("processing mlesiewski.simpledi.annotations");
         try {
             // 1. process @Produce annotations - create @Produce Providers
-            ProduceAnnotationsProcessor.process(roundEnv, codeGeneratedCollector);
+            ProduceAnnotationsProcessor.process(roundEnv, collector);
             // 2. process @Bean annotations - creating Providers for them (if no producers)
             // 3. process @Inject annotations - creating Providers for them and their targets if none were created already
+            // 4. process @CustomScope annotations - just garter types
+            customScopeAnnotationProcessor.process(roundEnv);
             if (roundEnv.processingOver()) {
                 // 4. write source files
-                codeWriter.writeSourceFiles(codeGeneratedCollector.values());
-                // 5. write service loader file
-                codeWriter.writeServiceLoader(codeGeneratedCollector.values());
+                codeWriter.writeSourceFiles(collector.registrable());
+                // 5. write Registrable service loader file
+                codeWriter.writeRegistrableServiceLoader(collector.registrable());
+                // 6. write Scope service loader file
+                codeWriter.writeScopeServiceLoader(customScopeAnnotationProcessor.scopes());
             }
         } catch (SimpleDiAptException e) {
             log(e);

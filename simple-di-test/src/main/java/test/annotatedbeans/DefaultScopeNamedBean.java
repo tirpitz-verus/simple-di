@@ -4,7 +4,7 @@ import mlesiewski.simpledi.annotations.Bean;
 
 import java.util.UUID;
 
-@Bean(name = "default scope named bean")
+@Bean(name = "default_scope_named_bean")
 public class DefaultScopeNamedBean {
 
     public static final UUID CALL_UUID = UUID.randomUUID();

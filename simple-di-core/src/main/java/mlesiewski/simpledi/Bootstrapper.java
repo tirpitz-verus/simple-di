@@ -1,6 +1,7 @@
 package mlesiewski.simpledi;
 
 import mlesiewski.simpledi.annotations.Registerable;
+import mlesiewski.simpledi.scopes.Scope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,10 +10,10 @@ import java.util.ServiceLoader;
 /**
  * This class bootstraps {@link Registerable} discovery and registration.
  */
-public final class Bootstrapper {
+final class Bootstrapper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Bootstrapper.class);
-    private static boolean bootstrapped = false;
+    static boolean bootstrapped = false;
 
     /**
      * no you can't
@@ -23,16 +24,28 @@ public final class Bootstrapper {
     /**
      * Bootstraps {@link BeanProvider} registration.
      */
-    public static void bootstrap() {
+    static void bootstrap() {
         if (bootstrapped) {
             LOGGER.warn("already bootstrapped - skipping");
+            return;
         }
-        LOGGER.trace("bootstrapping");
+        LOGGER.trace("bootstrapping custom scopes");
+        ServiceLoader<Scope> scopes = ServiceLoader.load(Scope.class);
+        int scopeCount = 0;
+        for (Scope scope : scopes) {
+            BeanRegistry.register(scope);
+            LOGGER.trace("registered {}", scope.getClass().getName());
+            scopeCount++;
+        }
+        LOGGER.trace("bootstrapping registrable classes");
         ServiceLoader<Registerable> registered = ServiceLoader.load(Registerable.class);
-        registered.forEach((registerable) -> {
+        int registeredCount = 0;
+        for (Registerable registerable : registered) {
             registerable.register();
             LOGGER.trace("registered {}", registerable.getClass().getName());
-        });
+            registeredCount++;
+        }
+        LOGGER.debug("bootstrapping completed, loaded {} scopes and registered {} classes", scopeCount, registeredCount);
         bootstrapped = true;
     }
 }

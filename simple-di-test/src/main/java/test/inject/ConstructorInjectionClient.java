@@ -1,7 +1,7 @@
 package test.inject;
 
-import mlesiewski.simpledi.scopes.ApplicationScope;
 import mlesiewski.simpledi.annotations.Inject;
+import test.util.TestScope;
 
 public class ConstructorInjectionClient {
 
@@ -11,10 +11,10 @@ public class ConstructorInjectionClient {
     final BeanInjectedByType scopedByType;
 
     public ConstructorInjectionClient(
-            @Inject(name = "bean injected by name") BeanInjectedByName defaultScopeByName,
+            @Inject(name = "bean_injected_by_name") BeanInjectedByName defaultScopeByName,
             @Inject BeanInjectedByType defaultScopeByType,
-            @Inject(name = "bean injected by name", scope = ApplicationScope.NAME) BeanInjectedByName scopedByName,
-            @Inject(scope = ApplicationScope.NAME) BeanInjectedByType scopedByType) {
+            @Inject(name = "bean_injected_by_name", scope = TestScope.NAME) BeanInjectedByName scopedByName,
+            @Inject(scope = TestScope.NAME) BeanInjectedByType scopedByType) {
         this.defaultScopeByName = defaultScopeByName;
         this.defaultScopeByType = defaultScopeByType;
         this.scopedByName = scopedByName;

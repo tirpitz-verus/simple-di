@@ -1,7 +1,7 @@
 package test.producers;
 
-import mlesiewski.simpledi.scopes.ApplicationScope;
 import mlesiewski.simpledi.annotations.Inject;
+import test.util.TestScope;
 
 public class InjectionClient {
 
@@ -14,6 +14,6 @@ public class InjectionClient {
     @Inject(name = UnnamedBeanProducer.NAMED_B)
     UnnamedBean namedBeanB;
 
-    @Inject(scope = ApplicationScope.NAME)
+    @Inject(scope = TestScope.NAME)
     UnnamedBean scopedUnnamedBean;
 }

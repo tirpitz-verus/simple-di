@@ -12,6 +12,8 @@ public class BootstrapperTest implements Registerable {
 
     @Test
     public void bootstrapRegistersRegisterables() throws Exception {
+        // given
+        Bootstrapper.bootstrapped = false;
         // when
         Bootstrapper.bootstrap();
         // then

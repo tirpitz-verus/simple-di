@@ -1,8 +1,10 @@
 package mlesiewski.simpledi;
 
+import mlesiewski.simpledi.annotations.Registerable;
 import mlesiewski.simpledi.model.BeanProviderEntity;
 import mlesiewski.simpledi.model.GeneratedCode;
 import mlesiewski.simpledi.model.ProducedBeanProviderEntity;
+import mlesiewski.simpledi.scopes.Scope;
 
 import javax.annotation.processing.Filer;
 import javax.tools.FileObject;
@@ -20,7 +22,6 @@ import java.util.Map;
 class GeneratedCodeWriter {
 
     private final Filer filer;
-    private Writer writer = null;
 
     GeneratedCodeWriter(Filer filer) {
         this.filer = filer;
@@ -30,6 +31,7 @@ class GeneratedCodeWriter {
         generated.forEach(this::write);
     }
 
+    /** writes registrable class */
     private void write(GeneratedCode generated) {
         Logger.note("attempting to create a source file for '" + generated.typeName() + "'");
         try {
@@ -46,6 +48,7 @@ class GeneratedCodeWriter {
                 params.put("beanName", entity.beanEntity().name());
                 params.put("beanScope", entity.beanEntity().scope());
                 params.put("beanProducerBeanName", entity.beanProducer().typeName());
+                params.put("beanProducerBeanScope", entity.beanProducer().scope());
                 params.put("beanProducerMethod", entity.producerMethod());
             } else if (generated instanceof BeanProviderEntity) {
                 BeanProviderEntity entity = (BeanProviderEntity) generated;
@@ -66,23 +69,37 @@ class GeneratedCodeWriter {
         }
     }
 
-    void writeServiceLoader(Collection<GeneratedCode> generated) {
+    /** writes service loader filer for registrable */
+    void writeRegistrableServiceLoader(Collection<GeneratedCode> registrable) {
+        writeServiceLoader(registrable, Registerable.class, (Writer writer, GeneratedCode aClass) -> writer.write(aClass.typeName()));
+    }
+
+    /** writes service loader filer for custom scopes */
+    void writeScopeServiceLoader(Collection<String> scopes) {
+        writeServiceLoader(scopes, Scope.class, Writer::write);
+    }
+
+    /** writes a service loader file */
+    private <T> void writeServiceLoader(Collection<T> generated, Class service, WritingOperation<T> operation) {
         StandardLocation location = StandardLocation.CLASS_OUTPUT;
         String pkg = "";
-        String relativeName = "META-INF/services/mlesiewski.simpledi.annotations.Registerable";
+        String relativeName = "META-INF/services/" + service.getName();
         Logger.note("attempting to write to a resource file '" + relativeName + "'");
         try {
-            if (writer == null) {
-                FileObject resource = filer.createResource(location, pkg, relativeName);
-                writer = resource.openWriter();
-            }
-            for (GeneratedCode code : generated) {
-                writer.write(code.typeName());
+            FileObject resource = filer.createResource(location, pkg, relativeName);
+            Writer writer = resource.openWriter();
+            for (T code : generated) {
+                operation.apply(writer, code);
                 writer.write(System.lineSeparator());
             }
-            writer.flush();
+            writer.close();
         } catch (IOException e) {
             throw new SimpleDiAptException("could not write a file '" + relativeName + "' because: " + e.getMessage());
         }
     }
+}
+
+@FunctionalInterface
+interface WritingOperation<T> {
+    void apply(Writer writer, T object) throws IOException;
 }

@@ -13,7 +13,7 @@ public class ScopedNamedBeanTest {
     @Test
     public void scopedNamedBeanIsInjectable() throws Exception {
         // given
-        ScopedNamedBean bean = BeanRegistry.getBean("scoped named bean");
+        ScopedNamedBean bean = BeanRegistry.getBean("scoped_named_bean");
         // when
         UUID actual = bean.call();
         // then

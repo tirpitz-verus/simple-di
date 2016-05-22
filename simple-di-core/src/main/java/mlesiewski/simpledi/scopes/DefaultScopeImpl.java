@@ -13,16 +13,16 @@ import java.util.WeakHashMap;
  * first to see if it contains a {@link mlesiewski.simpledi.annotations.Bean} under the name provided. If the value is
  * {@code null} then a registered {@link BeanProvider} is asked for a new instance.
  */
-class DefaultScopeImpl implements Scope {
+public class DefaultScopeImpl implements Scope {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultScopeImpl.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(DefaultScopeImpl.class);
 
-    final String name;
-    final HashMap<String, BeanProvider> providers = new HashMap<>();
-    final WeakHashMap<String, Object> beanCache = new WeakHashMap<>();
-    boolean started = false;
+    protected final String name;
+    protected final HashMap<String, BeanProvider> providers = new HashMap<>();
+    protected final WeakHashMap<String, Object> beanCache = new WeakHashMap<>();
+    protected boolean started = false;
 
-    DefaultScopeImpl(String name) {
+    protected DefaultScopeImpl(String name) {
         LOGGER.debug("instantiating scope with name '{}'", name);
         this.name = name;
     }
@@ -42,7 +42,7 @@ class DefaultScopeImpl implements Scope {
     }
 
     /** Returns {@link mlesiewski.simpledi.annotations.Bean} instance from cache. */
-    <T> T getBeanFromBeans(String name) {
+    protected <T> T getBeanFromBeans(String name) {
         LOGGER.trace("getBeanFromBeans({})", name);
         @SuppressWarnings("unchecked")
         T bean = (T) beanCache.get(name);
@@ -55,7 +55,7 @@ class DefaultScopeImpl implements Scope {
     }
 
     /** Calls a provider for a {@link mlesiewski.simpledi.annotations.Bean} instance. */
-    <T> T provideBean(String name) {
+    protected <T> T provideBean(String name) {
         LOGGER.trace("provideBean({})", name);
         T bean;
         try {
@@ -86,7 +86,7 @@ class DefaultScopeImpl implements Scope {
     /** {@inheritDoc} */
     @Override
     public <T> void register(BeanProvider<T> beanProvider, String name) {
-        LOGGER.trace("register({}, name)", beanProvider, name);
+        LOGGER.trace("register({}, {})", beanProvider, name);
         if (providers.containsKey(name)) {
             throw new SimpleDiException("Scope '" + getName() + "' already has a BeanProvider instance registered under the name '" + name + "'");
         }

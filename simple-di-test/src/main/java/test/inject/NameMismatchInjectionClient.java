@@ -4,6 +4,6 @@ import mlesiewski.simpledi.annotations.Inject;
 
 public class NameMismatchInjectionClient {
 
-    @Inject(name = "bean injected by name")
+    @Inject(name = "bean_injected_by_name")
     BeanInjectedByType bean;
 }

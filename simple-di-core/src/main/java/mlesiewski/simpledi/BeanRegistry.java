@@ -111,6 +111,16 @@ public final class BeanRegistry {
     }
 
     /**
+     * Registers new scope.
+     *
+     * @param scope scope to register
+     * @throws SimpleDiException if scope is null or is already registered
+     */
+    public static void register(Scope scope) {
+        DELEGATE.register(scope);
+    }
+
+    /**
      * @return name of the default scope
      */
     public static String defaultScope() {
