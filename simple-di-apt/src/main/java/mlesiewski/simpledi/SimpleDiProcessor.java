@@ -21,6 +21,7 @@ public class SimpleDiProcessor extends AbstractProcessor {
     private GeneratedCodeWriter codeWriter;
     private GeneratedCodeCollector collector = new GeneratedCodeCollector();
     private CustomScopeAnnotationProcessor customScopeAnnotationProcessor = new CustomScopeAnnotationProcessor();
+    private BeanAnnotationProcessor beanAnnotationProcessor = new BeanAnnotationProcessor(collector);
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -37,6 +38,7 @@ public class SimpleDiProcessor extends AbstractProcessor {
             // 1. process @Produce annotations - create @Produce Providers
             ProduceAnnotationsProcessor.process(roundEnv, collector);
             // 2. process @Bean annotations - creating Providers for them (if no producers)
+            beanAnnotationProcessor.process(roundEnv);
             // 3. process @Inject annotations - creating Providers for them and their targets if none were created already
             // 4. process @CustomScope annotations - just garter types
             customScopeAnnotationProcessor.process(roundEnv);

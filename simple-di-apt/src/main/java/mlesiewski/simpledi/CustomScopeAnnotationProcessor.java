@@ -1,6 +1,7 @@
 package mlesiewski.simpledi;
 
 import mlesiewski.simpledi.annotations.CustomScope;
+import mlesiewski.simpledi.model.GeneratedCodeCollector;
 import mlesiewski.simpledi.scopes.Scope;
 
 import javax.annotation.processing.RoundEnvironment;

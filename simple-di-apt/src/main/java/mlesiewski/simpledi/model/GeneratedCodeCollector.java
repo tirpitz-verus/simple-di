@@ -17,7 +17,10 @@ public class GeneratedCodeCollector {
      * @param generatedCode instance to collect
      */
     public void registrable(GeneratedCode generatedCode) {
-        generated.put(generatedCode.typeName(), generatedCode);
+        String key = generatedCode.typeName();
+        if (!generated.containsKey(key)) {
+            generated.put(key, generatedCode);
+        }
     }
 
     /** @return a collection of {@link GeneratedCode} instances */
