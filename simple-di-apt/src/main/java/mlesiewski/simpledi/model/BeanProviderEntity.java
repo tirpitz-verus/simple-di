@@ -31,4 +31,11 @@ public class BeanProviderEntity extends ClassEntity implements GeneratedCode {
     public BeanEntity beanEntity() {
         return this.beanEntity;
     }
+
+    /**
+     * @return name of the provided {@link BeanEntity}.
+     */
+    public BeanName beanName() {
+        return beanEntity().beanName();
+    }
 }

@@ -1,7 +1,6 @@
 package mlesiewski.simpledi.model;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Collects {@link GeneratedCode}.
@@ -11,15 +10,20 @@ public class GeneratedCodeCollector {
     /** store for registrable classes */
     private LinkedHashMap<String, GeneratedCode> generated = new LinkedHashMap<>();
 
+    /** bean providers */
+    private HashMap<BeanName, BeanProviderEntity> providers = new HashMap<>();
+
     /**
-     * Collects new {@link GeneratedCode} instance. It can be overwritten.
+     * Collects new {@link BeanProviderEntity} instance.
+     * It cannot be overwritten.
+     * Provider once inserted cannot be overwritten.
      *
-     * @param generatedCode instance to collect
+     * @param provider instance to collect
      */
-    public void registrable(GeneratedCode generatedCode) {
-        String key = generatedCode.typeName();
-        if (!generated.containsKey(key)) {
-            generated.put(key, generatedCode);
+    public void registrable(BeanProviderEntity provider) {
+        if (!providers.containsKey(provider.beanName())) {
+            providers.put(provider.beanName(), provider);
+            generated.put(provider.typeName(), provider);
         }
     }
 

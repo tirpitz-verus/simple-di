@@ -19,9 +19,10 @@ public class SimpleDiProcessor extends AbstractProcessor {
     private static final boolean ANNOTATIONS_CLAIMED = true;
 
     private GeneratedCodeWriter codeWriter;
-    private GeneratedCodeCollector collector = new GeneratedCodeCollector();
-    private CustomScopeAnnotationProcessor customScopeAnnotationProcessor = new CustomScopeAnnotationProcessor();
-    private BeanAnnotationProcessor beanAnnotationProcessor = new BeanAnnotationProcessor(collector);
+    private final GeneratedCodeCollector collector = new GeneratedCodeCollector();
+    private final ProduceAnnotationsProcessor produceAnnotationsProcessor = new ProduceAnnotationsProcessor(collector);
+    private final BeanAnnotationProcessor beanAnnotationProcessor = new BeanAnnotationProcessor(collector);
+    private final CustomScopeAnnotationProcessor customScopeAnnotationProcessor = new CustomScopeAnnotationProcessor();
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -36,7 +37,7 @@ public class SimpleDiProcessor extends AbstractProcessor {
         Logger.note("processing mlesiewski.simpledi.annotations");
         try {
             // 1. process @Produce annotations - create @Produce Providers
-            ProduceAnnotationsProcessor.process(roundEnv, collector);
+            produceAnnotationsProcessor.process(roundEnv, collector);
             // 2. process @Bean annotations - creating Providers for them (if no producers)
             beanAnnotationProcessor.process(roundEnv);
             // 3. process @Inject annotations - creating Providers for them and their targets if none were created already

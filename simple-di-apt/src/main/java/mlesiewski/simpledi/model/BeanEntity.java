@@ -21,6 +21,7 @@ public class BeanEntity {
      * Creates new entity from a Java class with default scope and name.
      * <br>
      * {@link Builder} uses this constructor.
+     *
      * @param classEntity Java class denoted by this bean.
      */
     public BeanEntity(ClassEntity classEntity) {
@@ -84,10 +85,32 @@ public class BeanEntity {
     }
 
     /**
+     * @return name of this bean
+     */
+    public BeanName beanName() { return new BeanName(name(), scope()); }
+
+    /**
      * @return instance of {@link Builder}
      */
     public static Builder builder() {
         return new Builder();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof BeanEntity)) {
+            return false;
+        }
+        BeanEntity that = (BeanEntity) o;
+        return Objects.equals(beanName(), that.beanName());
+    }
+
+    @Override
+    public int hashCode() {
+        return beanName().hashCode();
     }
 
     public static class Builder {
