@@ -13,5 +13,6 @@ public class TestScope extends DefaultScopeImpl {
 
     public TestScope() {
         super(NAME);
+        start();
     }
 }

@@ -68,4 +68,9 @@ public class ApplicationScope extends DefaultScopeImpl {
             throw new SimpleDiException("In Scope '" + getName() + "' bean '" + name + "' has a different type to requested", ccs);
         }
     }
+
+    @Override
+    public boolean hasBean(String name) {
+        return eagerBeanCache.containsKey(name);
+    }
 }

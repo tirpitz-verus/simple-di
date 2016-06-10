@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 /** A delegate for {@link BeanRegistry}. Default scope is {@link ApplicationScope}. */
 class BeanRegistryImpl {
@@ -66,14 +67,18 @@ class BeanRegistryImpl {
         return getBean(aClass.getName());
     }
 
-
     /**
-     * Calls {@link #getBean(String, String)} with a default scope name.
+     * Calls {@link #getBean(String, String)} with a first scope that has a bean with the name provided.
      *
      * @return a bean instance
      */
     <T> T getBean(String name) {
-        return getBean(name, DEFAULT_SCOPE);
+        Optional<Scope> optional = scopes.values().stream().filter(scope -> scope.hasBean(name)).findFirst();
+        if (optional.isPresent()) {
+            return optional.get().getBean(name);
+        } else {
+            throw new SimpleDiException("Cannot find a scope that provides a bean '" + name + "'");
+        }
     }
 
     /** @return a bean instance from the desired scope or default scope as a fallback. */
