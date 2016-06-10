@@ -1,4 +1,4 @@
-package mlesiewski.simpledi;
+package mlesiewski.simpledi.writer;
 
 import java.io.IOException;
 import java.io.Writer;

@@ -1,5 +1,6 @@
-package mlesiewski.simpledi;
+package mlesiewski.simpledi.template;
 
+import mlesiewski.simpledi.SimpleDiAptException;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;

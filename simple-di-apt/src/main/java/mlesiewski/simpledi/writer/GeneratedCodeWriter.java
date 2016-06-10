@@ -1,10 +1,14 @@
-package mlesiewski.simpledi;
+package mlesiewski.simpledi.writer;
 
+import mlesiewski.simpledi.Logger;
+import mlesiewski.simpledi.SimpleDiAptException;
 import mlesiewski.simpledi.annotations.Registerable;
 import mlesiewski.simpledi.model.BeanProviderEntity;
 import mlesiewski.simpledi.model.GeneratedCode;
 import mlesiewski.simpledi.model.ProducedBeanProviderEntity;
 import mlesiewski.simpledi.scopes.Scope;
+import mlesiewski.simpledi.template.Template;
+import mlesiewski.simpledi.template.TemplateFactory;
 
 import javax.annotation.processing.Filer;
 import javax.tools.FileObject;
@@ -19,15 +23,15 @@ import java.util.Map;
 /**
  * Writes {@link mlesiewski.simpledi.model.GeneratedCode}.
  */
-class GeneratedCodeWriter {
+public class GeneratedCodeWriter {
 
     private final Filer filer;
 
-    GeneratedCodeWriter(Filer filer) {
+    public GeneratedCodeWriter(Filer filer) {
         this.filer = filer;
     }
 
-    void writeSourceFiles(Collection<GeneratedCode> generated) {
+    public void writeSourceFiles(Collection<GeneratedCode> generated) {
         generated.forEach(this::write);
     }
 
@@ -70,12 +74,12 @@ class GeneratedCodeWriter {
     }
 
     /** writes service loader filer for registrable */
-    void writeRegistrableServiceLoader(Collection<GeneratedCode> registrable) {
+    public void writeRegistrableServiceLoader(Collection<GeneratedCode> registrable) {
         writeServiceLoader(registrable, Registerable.class, (Writer writer, GeneratedCode aClass) -> writer.write(aClass.typeName()));
     }
 
     /** writes service loader filer for custom scopes */
-    void writeScopeServiceLoader(Collection<String> scopes) {
+    public void writeScopeServiceLoader(Collection<String> scopes) {
         writeServiceLoader(scopes, Scope.class, Writer::write);
     }
 

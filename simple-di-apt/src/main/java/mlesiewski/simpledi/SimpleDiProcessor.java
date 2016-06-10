@@ -1,6 +1,11 @@
 package mlesiewski.simpledi;
 
 import mlesiewski.simpledi.model.GeneratedCodeCollector;
+import mlesiewski.simpledi.processors.BeanAnnotationProcessor;
+import mlesiewski.simpledi.processors.CustomScopeAnnotationProcessor;
+import mlesiewski.simpledi.processors.ProduceAnnotationsProcessor;
+import mlesiewski.simpledi.template.TemplateFactory;
+import mlesiewski.simpledi.writer.GeneratedCodeWriter;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;

@@ -1,5 +1,8 @@
-package mlesiewski.simpledi;
+package mlesiewski.simpledi.processors;
 
+import mlesiewski.simpledi.BeanNameValidator;
+import mlesiewski.simpledi.Logger;
+import mlesiewski.simpledi.SimpleDiAptException;
 import mlesiewski.simpledi.annotations.Produce;
 import mlesiewski.simpledi.annotations._Default;
 import mlesiewski.simpledi.model.*;
@@ -15,11 +18,11 @@ import java.util.Set;
 /**
  * Process @Produce annotations - creates @Produce Providers.
  */
-class ProduceAnnotationsProcessor {
+public class ProduceAnnotationsProcessor {
 
     private final GeneratedCodeCollector generatedCollector;
 
-    ProduceAnnotationsProcessor(GeneratedCodeCollector generatedCollector) {
+    public ProduceAnnotationsProcessor(GeneratedCodeCollector generatedCollector) {
         this.generatedCollector = generatedCollector;
     }
 
@@ -29,7 +32,7 @@ class ProduceAnnotationsProcessor {
      * @param roundEnv           environment to get annotated {@link Element Elements} from
      * @param generatedCollector new {@link GeneratedCode} classes will be added here
      */
-    void process(RoundEnvironment roundEnv, GeneratedCodeCollector generatedCollector) {
+    public void process(RoundEnvironment roundEnv, GeneratedCodeCollector generatedCollector) {
         roundEnv.getElementsAnnotatedWith(Produce.class).forEach(this::processElement);
     }
 

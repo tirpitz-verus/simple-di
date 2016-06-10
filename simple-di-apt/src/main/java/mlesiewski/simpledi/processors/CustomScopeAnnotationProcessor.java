@@ -1,5 +1,7 @@
-package mlesiewski.simpledi;
+package mlesiewski.simpledi.processors;
 
+import mlesiewski.simpledi.Logger;
+import mlesiewski.simpledi.SimpleDiAptException;
 import mlesiewski.simpledi.annotations.CustomScope;
 import mlesiewski.simpledi.model.GeneratedCodeCollector;
 import mlesiewski.simpledi.scopes.Scope;
@@ -14,12 +16,12 @@ import java.util.*;
 /**
  * Process @CustomScope annotations - just collects them.
  */
-class CustomScopeAnnotationProcessor {
+public class CustomScopeAnnotationProcessor {
 
     private LinkedList<String> names = new LinkedList<>();
 
     /** @param roundEnv environment to get annotated {@link Element Elements} from */
-    void process(RoundEnvironment roundEnv) {
+    public void process(RoundEnvironment roundEnv) {
         roundEnv.getElementsAnnotatedWith(CustomScope.class).stream().forEach(this::processElement);
     }
 
@@ -32,7 +34,7 @@ class CustomScopeAnnotationProcessor {
         names.add(element.asType().toString());
     }
 
-    Collection<String> scopes() {
+    public Collection<String> scopes() {
         return names;
     }
 

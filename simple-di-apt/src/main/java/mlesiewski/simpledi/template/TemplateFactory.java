@@ -1,4 +1,6 @@
-package mlesiewski.simpledi;
+package mlesiewski.simpledi.template;
+
+import mlesiewski.simpledi.SimpleDiAptException;
 
 import javax.annotation.processing.Filer;
 import javax.tools.FileObject;
@@ -14,12 +16,12 @@ public class TemplateFactory {
     private static Filer FILER;
 
     /** {@link Filer} is needed for getting resource files. */
-    static void set(Filer filer) {
+    public static void set(Filer filer) {
         FILER = filer;
     }
 
     /** Returns {@link Template} instance by name. */
-    static Template get(String name) {
+    public static Template get(String name) {
         Template result;
         if (!TEMPLATES.containsKey(name)) {
             try {

@@ -1,4 +1,6 @@
-package mlesiewski.simpledi;
+package mlesiewski.simpledi.template;
+
+import mlesiewski.simpledi.SimpleDiAptException;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -7,7 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /** Templates for Java class code generation. */
-class Template {
+public class Template {
 
     public static final String START = "\\{\\{";
     public static final String END = "\\}\\}";
@@ -46,7 +48,7 @@ class Template {
      * @return String containing compiled template
      * @throws SimpleDiAptException on unused key in template or in inputValues
      */
-    String compile(Map<String, String> inputValues) {
+    public String compile(Map<String, String> inputValues) {
         if (keyCount != inputValues.size()) {
             throw new SimpleDiAptException("template has " + keyCount + " keys but " + inputValues.size() + " were provided");
         }

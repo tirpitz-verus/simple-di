@@ -1,5 +1,8 @@
-package mlesiewski.simpledi;
+package mlesiewski.simpledi.processors;
 
+import mlesiewski.simpledi.BeanNameValidator;
+import mlesiewski.simpledi.Logger;
+import mlesiewski.simpledi.SimpleDiAptException;
 import mlesiewski.simpledi.annotations.Bean;
 import mlesiewski.simpledi.annotations._Default;
 import mlesiewski.simpledi.model.BeanEntity;
@@ -16,18 +19,18 @@ import java.util.Set;
 /**
  * Processes {@link mlesiewski.simpledi.annotations.Bean} annotations.
  */
-class BeanAnnotationProcessor {
+public class BeanAnnotationProcessor {
 
     private final GeneratedCodeCollector collector;
 
-    BeanAnnotationProcessor(GeneratedCodeCollector collector) {
+    public BeanAnnotationProcessor(GeneratedCodeCollector collector) {
         this.collector = collector;
     }
 
     /**
      * @param roundEnv elements to process
      */
-    void process(RoundEnvironment roundEnv) {
+    public void process(RoundEnvironment roundEnv) {
         roundEnv.getElementsAnnotatedWith(Bean.class).stream().forEach(this::processElement);
     }
 
