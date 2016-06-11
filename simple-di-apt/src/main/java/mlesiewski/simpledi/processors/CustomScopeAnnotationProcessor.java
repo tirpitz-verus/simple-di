@@ -2,8 +2,8 @@ package mlesiewski.simpledi.processors;
 
 import mlesiewski.simpledi.Logger;
 import mlesiewski.simpledi.SimpleDiAptException;
+import mlesiewski.simpledi.annotations.Bean;
 import mlesiewski.simpledi.annotations.CustomScope;
-import mlesiewski.simpledi.model.GeneratedCodeCollector;
 import mlesiewski.simpledi.scopes.Scope;
 
 import javax.annotation.processing.RoundEnvironment;
@@ -25,30 +25,29 @@ public class CustomScopeAnnotationProcessor {
         roundEnv.getElementsAnnotatedWith(CustomScope.class).stream().forEach(this::processElement);
     }
 
-    /**
-     * @param element element to precess
-     */
-    void processElement(Element element) {
-        Logger.note("processing element '" + element.getSimpleName() + "'");
-        validate(element);
-        names.add(element.asType().toString());
-    }
-
+    /** @return names of all the valid elements processed */
     public Collection<String> scopes() {
         return names;
     }
 
     /**
+     * @param element element to precess
+     */
+    private void processElement(Element element) {
+        Logger.note("processing element '" + element.getSimpleName() + "'");
+        validate(element);
+        names.add(element.asType().toString());
+    }
+
+    /**
      * @param element annotated element to validate - was the annotation applied to the right place?
      */
-    void validate(Element element) {
-        if (element.getKind() != ElementKind.CLASS) {
-            throw new SimpleDiAptException(CustomScope.class.getName() + " is only applicable for classes", element);
-        }
-        Set<Modifier> modifiers = element.getModifiers();
-        if (modifiers.contains(Modifier.ABSTRACT) || modifiers.contains(Modifier.PRIVATE) || modifiers.contains(Modifier.PROTECTED)) {
-            throw new SimpleDiAptException(CustomScope.class.getName() + " is only applicable for non-abstract public classes", element);
-        }
+    private void validate(Element element) {
+        CustomScope annotation = element.getAnnotation(CustomScope.class);
+        Validators.validBeanName(annotation.value(), CustomScope.class, element);
+        Validators.validAccessibility(element, CustomScope.class, "classes");
+        Validators.isAClass(element, CustomScope.class);
+
         String scopeInterfaceSimpleName = Scope.class.getSimpleName();
         TypeElement typeElement = (TypeElement) element;
         boolean implementsScope = getInterfaces(typeElement).stream()

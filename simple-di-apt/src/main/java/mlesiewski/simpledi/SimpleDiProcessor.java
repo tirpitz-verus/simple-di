@@ -42,7 +42,7 @@ public class SimpleDiProcessor extends AbstractProcessor {
         Logger.note("processing mlesiewski.simpledi.annotations");
         try {
             // 1. process @Produce annotations - create @Produce Providers
-            produceAnnotationsProcessor.process(roundEnv, collector);
+            produceAnnotationsProcessor.process(roundEnv);
             // 2. process @Bean annotations - creating Providers for them (if no producers)
             beanAnnotationProcessor.process(roundEnv);
             // 3. process @Inject annotations - creating Providers for them and their targets if none were created already

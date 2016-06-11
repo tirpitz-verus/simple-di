@@ -1,10 +1,8 @@
 package mlesiewski.simpledi.processors;
 
-import mlesiewski.simpledi.BeanNameValidator;
 import mlesiewski.simpledi.Logger;
 import mlesiewski.simpledi.SimpleDiAptException;
 import mlesiewski.simpledi.annotations.Bean;
-import mlesiewski.simpledi.annotations._Default;
 import mlesiewski.simpledi.model.BeanEntity;
 import mlesiewski.simpledi.model.BeanProviderEntity;
 import mlesiewski.simpledi.model.ClassEntity;
@@ -13,8 +11,7 @@ import mlesiewski.simpledi.model.GeneratedCodeCollector;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.Modifier;
-import java.util.Set;
+import javax.lang.model.type.DeclaredType;
 
 /**
  * Processes {@link mlesiewski.simpledi.annotations.Bean} annotations.
@@ -47,20 +44,10 @@ public class BeanAnnotationProcessor {
 
     /** validates element */
     private void validate(Element element) {
-        if (element.getKind() != ElementKind.CLASS) {
-            throw new SimpleDiAptException(Bean.class.getName() + " is only applicable for classes", element);
-        }
-        Set<Modifier> modifiers = element.getModifiers();
-        if (modifiers.contains(Modifier.ABSTRACT)) {
-            throw new SimpleDiAptException(Bean.class.getName() + " is only applicable for non-abstract classes", element);
-        }
-        if (modifiers.contains(Modifier.PRIVATE)) {
-            throw new SimpleDiAptException(Bean.class.getName() + " is not applicable private classes", element);
-        }
         Bean annotation = element.getAnnotation(Bean.class);
-        BeanNameValidator validator = new BeanNameValidator();
-        if (!_Default.VALUE.equals(annotation.name()) && !validator.isAValidName(annotation.name())) {
-            throw new SimpleDiAptException(Bean.class.getName() + " has an invalid bean name (" + annotation.name() + ")", element);
-        }
+        Validators.validBeanName(annotation.name(), Bean.class, element);
+        Validators.validAccessibility(element, Bean.class, "classes");
+        Validators.isAClass(element, Bean.class);
+        Validators.validBeanConstructor((DeclaredType) element.asType());
     }
 }
