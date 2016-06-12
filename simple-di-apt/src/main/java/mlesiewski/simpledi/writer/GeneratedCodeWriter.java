@@ -12,7 +12,6 @@ import mlesiewski.simpledi.template.TemplateFactory;
 
 import javax.annotation.processing.Filer;
 import javax.tools.FileObject;
-import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.io.Writer;
@@ -37,10 +36,14 @@ public class GeneratedCodeWriter {
 
     /** writes registrable class */
     private void write(GeneratedCode generated) {
-        Logger.note("attempting to create a source file for '" + generated.typeName() + "'");
+        String typeName = generated.typeName();
+        int dot = typeName.lastIndexOf(".");
+        String pkg = typeName.substring(0, dot);
+        CharSequence relativeName = typeName.substring(dot + 1, typeName.length()) + ".java";
+        Logger.note("attempting to create a source file for '" + typeName + "'");
         try {
-            JavaFileObject classFile = filer.createSourceFile(generated.typeName());
-            Writer writer = classFile.openWriter();
+            FileObject resource = filer.createResource(StandardLocation.SOURCE_OUTPUT, pkg, relativeName);
+            Writer writer = resource.openWriter();
             Template template;
             Map<String, String> params = new HashMap<>();
             if (generated instanceof ProducedBeanProviderEntity) {
@@ -69,7 +72,7 @@ public class GeneratedCodeWriter {
             writer.write(text);
             writer.close();
         } catch (IOException e) {
-            throw new SimpleDiAptException("could not write a class '" + generated.typeName() + "' file because: " + e.getMessage());
+            throw new SimpleDiAptException("could not write a class '" + typeName + "' file because: " + e.getMessage());
         }
     }
 
