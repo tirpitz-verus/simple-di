@@ -67,18 +67,29 @@ class Validators {
     static void validBeanConstructor(DeclaredType aClass) {
         List<? extends Element> enclosed = aClass.asElement().getEnclosedElements();
         List<ExecutableElement> constructors = ElementFilter.constructorsIn(enclosed);
-
-        List<Predicate<ExecutableElement>> po = Arrays.asList(
+        List<Predicate<ExecutableElement>> predicates = Arrays.asList(
                 e -> e.getParameters().isEmpty(),
                 e -> e.getAnnotation(Inject.class) != null,
                 e -> e.getParameters().stream().allMatch(p -> p.getAnnotation(Inject.class) != null)
         );
-        Predicate<ExecutableElement> reduce = po.stream().reduce(p -> false, Predicate::or);
-
-        boolean anyMatch = constructors.stream().peek(e -> Logger.note(e.getSimpleName().toString()))
+        Predicate<ExecutableElement> noArgsOrInject = predicates.stream().reduce(p -> false, Predicate::or);
+        boolean validFound = constructors.stream()
                 .filter(Validators::isFriendly)
-                .filter(reduce).peek(e -> Logger.note(e.getSimpleName().toString())).findAny().isPresent();
+                .anyMatch(noArgsOrInject);
+        if (!validFound) {
+            throw new SimpleDiAptException(aClass.toString() + " does not have a valid default or @Inject annotated constructor");
+        }
+    }
 
+    /**
+     * @throws SimpleDiAptException if the class provided does not have a constructor that is default or no args.
+     */
+    static void validScopeConstructor(DeclaredType aClass) {
+        List<? extends Element> enclosed = aClass.asElement().getEnclosedElements();
+        List<ExecutableElement> constructors = ElementFilter.constructorsIn(enclosed);
+        boolean anyMatch = constructors.stream()
+                .filter(Validators::isFriendly)
+                .anyMatch(e -> e.getParameters().isEmpty());
         if (!anyMatch) {
             throw new SimpleDiAptException(aClass.toString() + " does not have a valid default or @Inject annotated constructor");
         }

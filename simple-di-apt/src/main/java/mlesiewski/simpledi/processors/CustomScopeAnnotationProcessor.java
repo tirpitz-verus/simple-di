@@ -47,6 +47,7 @@ public class CustomScopeAnnotationProcessor {
         Validators.validBeanName(annotation.value(), CustomScope.class, element);
         Validators.validAccessibility(element, CustomScope.class, "classes");
         Validators.isAClass(element, CustomScope.class);
+        Validators.validScopeConstructor((DeclaredType) element.asType());
 
         String scopeInterfaceSimpleName = Scope.class.getSimpleName();
         TypeElement typeElement = (TypeElement) element;
