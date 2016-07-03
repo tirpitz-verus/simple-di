@@ -1,8 +1,11 @@
 package mlesiewski.simpledi.model;
 
 import mlesiewski.simpledi.BeanRegistry;
+import mlesiewski.simpledi.SimpleDiAptException;
 import mlesiewski.simpledi.annotations._Default;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -16,6 +19,12 @@ public class BeanEntity {
     private String scope = _Default.VALUE;
     /** Java class denoted by this bean. */
     private final ClassEntity classEntity;
+    /** constructor for the bean */
+    private BeanConstructor constructor = BeanConstructor.DEFAULT;
+    /** fields that have to be injected after instantiation */
+    private final Map<String, BeanName> fields = new HashMap<>();
+    /** fields that have to be injected after instantiation */
+    private final Map<String, BeanName> setters = new HashMap<>();
 
     /**
      * Creates new entity from a Java class with default scope and name.
@@ -88,6 +97,32 @@ public class BeanEntity {
      * @return name of this bean
      */
     public BeanName beanName() { return new BeanName(name(), scope()); }
+
+    /** @return constructor for this bean */
+    public BeanConstructor constructor() {
+        return constructor;
+    }
+
+    /** @param constructor a {@link BeanConstructor} for this bean - it can be set only if the current one is default */
+    public void constructor(BeanConstructor constructor) {
+        if (constructorIsDefault()) {
+            this.constructor = constructor;
+        } else {
+            throw new SimpleDiAptException("bean constructor redefinition");
+        }
+    }
+
+    public boolean constructorIsDefault() {
+        return constructor.isDefault();
+    }
+
+    public void field(String fieldName, BeanName beanName) {
+        fields.put(fieldName, beanName);
+    }
+
+    public void setter(String methodName, BeanName beanName) {
+        setters.put(methodName, beanName);
+    }
 
     /**
      * @return instance of {@link Builder}

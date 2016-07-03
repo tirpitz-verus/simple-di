@@ -31,4 +31,14 @@ public class GeneratedCodeCollector {
     public Collection<GeneratedCode> registrable() {
         return new ArrayList<>(generated.values());
     }
+
+    /** @return true if a {@link BeanProviderEntity} for the {@link BeanName} provided was registered*/
+    public boolean hasBean(BeanName beanName) {
+        return providers.containsKey(beanName);
+    }
+
+    /** @return {@link BeanEntity} that is beaning provided by the {@link BeanProviderEntity} registered under the {@link BeanName} provided */
+    public BeanEntity getBean(BeanName beanName) {
+        return providers.get(beanName).beanEntity();
+    }
 }

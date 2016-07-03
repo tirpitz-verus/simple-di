@@ -1,7 +1,6 @@
 package mlesiewski.simpledi.processors;
 
 import mlesiewski.simpledi.Logger;
-import mlesiewski.simpledi.SimpleDiAptException;
 import mlesiewski.simpledi.annotations.Bean;
 import mlesiewski.simpledi.model.BeanEntity;
 import mlesiewski.simpledi.model.BeanProviderEntity;
@@ -10,7 +9,6 @@ import mlesiewski.simpledi.model.GeneratedCodeCollector;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.DeclaredType;
 
 /**

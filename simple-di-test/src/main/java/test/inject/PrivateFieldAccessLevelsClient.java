@@ -12,4 +12,8 @@ public class PrivateFieldAccessLevelsClient {
     public UUID call() {
         return privateField.call();
     }
+
+    public void setPrivateField(BeanInjectedByType privateField) {
+        this.privateField = privateField;
+    }
 }

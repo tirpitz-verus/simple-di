@@ -1,9 +1,13 @@
 package mlesiewski.simpledi.model;
 
+import mlesiewski.simpledi.annotations._Default;
+import mlesiewski.simpledi.scopes.Scope;
+
+import javax.lang.model.type.TypeMirror;
 import java.util.Objects;
 
 /** immutable class */
-public class BeanName {
+public final class BeanName {
 
     private final String name;
     private final String scope;
@@ -13,12 +17,25 @@ public class BeanName {
         this.scope = scope;
     }
 
+    public BeanName(String name) {
+        this.name = name;
+        this.scope = _Default.VALUE;
+    }
+
     public String name() {
         return name;
     }
 
+    public boolean nameIsDefault() {
+        return _Default.VALUE.equals(name);
+    }
+
     public String scope() {
         return scope;
+    }
+
+    public boolean scopeIsDefault() {
+        return _Default.VALUE.equals(scope);
     }
 
     @Override

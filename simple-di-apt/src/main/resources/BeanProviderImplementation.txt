@@ -13,6 +13,7 @@ public class {{beanProviderSimpleName}} implements BeanProvider<{{beanType}}>, R
     }
 
     public {{beanType}} provide() {
-        return new {{beanType}}();
+        {{beanType}} bean = new {{beanType}}({{constructorArguments}});
+        return bean;
     }
 }

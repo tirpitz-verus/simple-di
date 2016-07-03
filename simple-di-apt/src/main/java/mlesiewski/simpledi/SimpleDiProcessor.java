@@ -3,6 +3,7 @@ package mlesiewski.simpledi;
 import mlesiewski.simpledi.model.GeneratedCodeCollector;
 import mlesiewski.simpledi.processors.BeanAnnotationProcessor;
 import mlesiewski.simpledi.processors.CustomScopeAnnotationProcessor;
+import mlesiewski.simpledi.processors.InjectAnnotationProcessor;
 import mlesiewski.simpledi.processors.ProduceAnnotationsProcessor;
 import mlesiewski.simpledi.template.TemplateFactory;
 import mlesiewski.simpledi.writer.GeneratedCodeWriter;
@@ -27,6 +28,7 @@ public class SimpleDiProcessor extends AbstractProcessor {
     private final GeneratedCodeCollector collector = new GeneratedCodeCollector();
     private final ProduceAnnotationsProcessor produceAnnotationsProcessor = new ProduceAnnotationsProcessor(collector);
     private final BeanAnnotationProcessor beanAnnotationProcessor = new BeanAnnotationProcessor(collector);
+    private final InjectAnnotationProcessor injectAnnotationProcessor = new InjectAnnotationProcessor(collector);
     private final CustomScopeAnnotationProcessor customScopeAnnotationProcessor = new CustomScopeAnnotationProcessor();
 
     @Override
@@ -46,6 +48,7 @@ public class SimpleDiProcessor extends AbstractProcessor {
             // 2. process @Bean annotations - creating Providers for them (if no producers)
             beanAnnotationProcessor.process(roundEnv);
             // 3. process @Inject annotations - creating Providers for them and their targets if none were created already
+            injectAnnotationProcessor.process(roundEnv);
             // 4. process @CustomScope annotations - just garter types
             customScopeAnnotationProcessor.process(roundEnv);
             if (roundEnv.processingOver()) {
@@ -65,7 +68,10 @@ public class SimpleDiProcessor extends AbstractProcessor {
     }
 
     private void log(Exception e) {
-        Logger.error("unexpected error: " + e.getMessage());
+        Logger.error("unexpected error: " + e.getClass() + " " + e.getMessage());
+        for (StackTraceElement element : e.getStackTrace()) {
+            Logger.note(element.toString());
+        }
     }
 
     private void log(SimpleDiAptException e) {

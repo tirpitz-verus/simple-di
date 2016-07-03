@@ -1,15 +1,12 @@
 package mlesiewski.simpledi.processors;
 
 import mlesiewski.simpledi.BeanNameValidator;
-import mlesiewski.simpledi.Logger;
 import mlesiewski.simpledi.SimpleDiAptException;
 import mlesiewski.simpledi.annotations.*;
 
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
+import javax.lang.model.element.*;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.ElementFilter;
 import java.util.Arrays;
 import java.util.List;
@@ -99,6 +96,13 @@ class Validators {
     static void isAMethod(Element element, Class<?> annotation) {
         if (element.getKind() != ElementKind.METHOD) {
             throw new SimpleDiAptException(annotation.getName() + " is only applicable for methods", element);
+        }
+    }
+
+    /** @throws SimpleDiAptException if element provided is a primitive */
+    static void isNotAPrimitive(Element element, Class<?> annotation) {
+        if (element.asType().getKind().isPrimitive()) {
+            throw new SimpleDiAptException(annotation.getName() + " is only applicable for non primitive types or constructors with non primitive arguments", element);
         }
     }
 }

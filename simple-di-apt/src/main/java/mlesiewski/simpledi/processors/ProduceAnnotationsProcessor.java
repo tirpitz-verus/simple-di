@@ -1,16 +1,13 @@
 package mlesiewski.simpledi.processors;
 
 import mlesiewski.simpledi.Logger;
-import mlesiewski.simpledi.SimpleDiAptException;
 import mlesiewski.simpledi.annotations.Bean;
 import mlesiewski.simpledi.annotations.Produce;
 import mlesiewski.simpledi.model.*;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeMirror;
 
 /**

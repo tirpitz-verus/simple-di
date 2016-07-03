@@ -3,9 +3,7 @@ package mlesiewski.simpledi.writer;
 import mlesiewski.simpledi.Logger;
 import mlesiewski.simpledi.SimpleDiAptException;
 import mlesiewski.simpledi.annotations.Registerable;
-import mlesiewski.simpledi.model.BeanProviderEntity;
-import mlesiewski.simpledi.model.GeneratedCode;
-import mlesiewski.simpledi.model.ProducedBeanProviderEntity;
+import mlesiewski.simpledi.model.*;
 import mlesiewski.simpledi.scopes.Scope;
 import mlesiewski.simpledi.template.Template;
 import mlesiewski.simpledi.template.TemplateFactory;
@@ -15,9 +13,8 @@ import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Writes {@link mlesiewski.simpledi.model.GeneratedCode}.
@@ -51,9 +48,10 @@ public class GeneratedCodeWriter {
                 template = TemplateFactory.get("ProducedBeanProviderImplementation");
                 params.put("beanProviderPackage", entity.packageName());
                 params.put("beanProviderSimpleName", entity.simpleName());
-                params.put("beanType", entity.beanEntity().typeName());
-                params.put("beanName", entity.beanEntity().name());
-                params.put("beanScope", entity.beanEntity().scope());
+                BeanEntity beanEntity = entity.beanEntity();
+                params.put("beanType", beanEntity.typeName());
+                params.put("beanName", beanEntity.name());
+                params.put("beanScope", beanEntity.scope());
                 params.put("beanProducerBeanName", entity.beanProducer().typeName());
                 params.put("beanProducerBeanScope", entity.beanProducer().scope());
                 params.put("beanProducerMethod", entity.producerMethod());
@@ -62,9 +60,26 @@ public class GeneratedCodeWriter {
                 template = TemplateFactory.get("BeanProviderImplementation");
                 params.put("beanProviderPackage", entity.packageName());
                 params.put("beanProviderSimpleName", entity.simpleName());
-                params.put("beanType", entity.beanEntity().typeName());
-                params.put("beanName", entity.beanEntity().name());
-                params.put("beanScope", entity.beanEntity().scope());
+                BeanEntity beanEntity = entity.beanEntity();
+                params.put("beanType", beanEntity.typeName());
+                params.put("beanName", beanEntity.name());
+                params.put("beanScope", beanEntity.scope());
+
+                String constructorArguments = beanEntity.constructor().list().stream()
+                        .map(beanName -> {
+                            if (beanName.scopeIsDefault()) {
+                                return String.format("BeanRegistry.getBean(\"%s\")", beanName.name());
+                            } else {
+                                return String.format("BeanRegistry.getBean(\"%s\", \"%s\")", beanName.name(), beanName.scope());
+                            }
+                        })
+                        .collect(Collectors.joining(", "));
+                params.put("constructorArguments", constructorArguments);
+
+//                beanEntity.fields;
+
+
+//                beanEntity.setters;
             } else {
                 throw new SimpleDiAptException("could not find template for " + generated.getClass().getName());
             }

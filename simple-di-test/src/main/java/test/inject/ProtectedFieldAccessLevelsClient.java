@@ -12,4 +12,8 @@ public class ProtectedFieldAccessLevelsClient {
     public UUID call() {
         return protectedField.call();
     }
+
+    public void protectedField(BeanInjectedByType protectedField) {
+        this.protectedField = protectedField;
+    }
 }

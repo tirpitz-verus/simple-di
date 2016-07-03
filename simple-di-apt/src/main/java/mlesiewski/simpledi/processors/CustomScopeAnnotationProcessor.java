@@ -2,16 +2,20 @@ package mlesiewski.simpledi.processors;
 
 import mlesiewski.simpledi.Logger;
 import mlesiewski.simpledi.SimpleDiAptException;
-import mlesiewski.simpledi.annotations.Bean;
 import mlesiewski.simpledi.annotations.CustomScope;
 import mlesiewski.simpledi.scopes.Scope;
 
 import javax.annotation.processing.RoundEnvironment;
-import javax.lang.model.element.*;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.Name;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Process @CustomScope annotations - just collects them.
