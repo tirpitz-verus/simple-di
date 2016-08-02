@@ -1,5 +1,7 @@
 package mlesiewski.simpledi.model;
 
+import java.util.Set;
+
 /**
  * An entity representing a class implementing BeanProvider interface.
  */
@@ -37,5 +39,9 @@ public class BeanProviderEntity extends ClassEntity implements GeneratedCode {
      */
     public BeanName beanName() {
         return beanEntity().beanName();
+    }
+
+    public Set<BeanName> hardDependencies() {
+        return beanEntity.hardDependencies();
     }
 }

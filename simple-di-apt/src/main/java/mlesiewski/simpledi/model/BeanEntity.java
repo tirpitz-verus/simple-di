@@ -4,9 +4,7 @@ import mlesiewski.simpledi.BeanRegistry;
 import mlesiewski.simpledi.SimpleDiAptException;
 import mlesiewski.simpledi.annotations._Default;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * An entity of a bean that can be retrieved from the {@link BeanRegistry}.
@@ -25,6 +23,8 @@ public class BeanEntity {
     private final Map<String, BeanName> fields = new HashMap<>();
     /** fields that have to be injected after instantiation */
     private final Map<String, BeanName> setters = new HashMap<>();
+    /** hard dependencies */
+    private final Set<BeanName> hardDependencies = new HashSet<>();
 
     /**
      * Creates new entity from a Java class with default scope and name.
@@ -103,25 +103,42 @@ public class BeanEntity {
         return constructor;
     }
 
-    /** @param constructor a {@link BeanConstructor} for this bean - it can be set only if the current one is default */
+    /**
+     * sets a non-default constructor for this bean - all arguments will be automatically set as hard dependencies
+     * @param constructor a {@link BeanConstructor} for this bean - it can be set only if the current one is default
+     */
     public void constructor(BeanConstructor constructor) {
         if (constructorIsDefault()) {
             this.constructor = constructor;
+            constructor.list().forEach(this::hardDependency);
         } else {
             throw new SimpleDiAptException("bean constructor redefinition");
         }
     }
 
+    /** @return true if the constructor set for instantiation is a default constructor */
     public boolean constructorIsDefault() {
         return constructor.isDefault();
     }
 
+    /** sets a soft dependency in a field */
     public void field(String fieldName, BeanName beanName) {
         fields.put(fieldName, beanName);
     }
 
+    /** sets a soft dependency on a setter method */
     public void setter(String methodName, BeanName beanName) {
         setters.put(methodName, beanName);
+    }
+
+    /** sets a hard dependency - constructor injection
+     */
+    public void hardDependency(BeanName dependency) {
+        hardDependencies.add(dependency);
+    }
+
+    public Set<BeanName> hardDependencies() {
+        return hardDependencies;
     }
 
     /**

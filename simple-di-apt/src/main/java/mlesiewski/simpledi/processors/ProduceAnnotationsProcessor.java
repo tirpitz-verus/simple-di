@@ -39,9 +39,7 @@ public class ProduceAnnotationsProcessor {
         Produce annotation = element.getAnnotation(Produce.class);
         ExecutableElement method = (ExecutableElement) element;
         BeanProviderEntity beanProvider = createBeanProducerProvider(method);
-        generatedCollector.registrable(beanProvider);
-        ProducedBeanProviderEntity producedBeanProvider = createProducedBeanProvider(annotation, method, beanProvider);
-        generatedCollector.registrable(producedBeanProvider);
+        createProducedBeanProvider(annotation, method, beanProvider);
     }
 
     /**
@@ -62,17 +60,21 @@ public class ProduceAnnotationsProcessor {
         TypeMirror beanProducerType = method.getEnclosingElement().asType();
         ClassEntity beanProducerClass = ClassEntity.from(beanProducerType);
         BeanEntity beanProducer = BeanEntity.builder().from(beanProducerClass).build();
-        return new BeanProviderEntity(beanProducer);
+        BeanProviderEntity beanProvider = new BeanProviderEntity(beanProducer);
+        generatedCollector.registrable(beanProvider);
+        return beanProvider;
     }
 
     /**
-     * @return bean provider that provides the produced bean - the one returned by {@link Produce} annotated method
+     * creates bean provider that provides the produced bean - the one returned by {@link Produce} annotated method
      */
-    private ProducedBeanProviderEntity createProducedBeanProvider(Produce annotation, ExecutableElement method, BeanProviderEntity beanProvider) {
+    private void createProducedBeanProvider(Produce annotation, ExecutableElement method, BeanProviderEntity beanProvider) {
         ClassEntity producedBeanClass = ClassEntity.from(method.getReturnType());
         BeanEntity producedBean = BeanEntity.builder().from(producedBeanClass).withScope(annotation.scope()).withName(annotation.name()).build();
+        producedBean.hardDependency(beanProvider.beanName());
         String producerMethod = method.getSimpleName().toString();
-        return new ProducedBeanProviderEntity(producedBean, beanProvider.beanEntity(), producerMethod);
+        ProducedBeanProviderEntity producedBeanProvider = new ProducedBeanProviderEntity(producedBean, beanProvider.beanEntity(), producerMethod);
+        generatedCollector.registrable(producedBeanProvider);
     }
 
 }

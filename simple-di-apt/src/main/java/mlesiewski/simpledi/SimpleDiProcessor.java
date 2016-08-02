@@ -1,5 +1,6 @@
 package mlesiewski.simpledi;
 
+import mlesiewski.simpledi.model.GeneratedCode;
 import mlesiewski.simpledi.model.GeneratedCodeCollector;
 import mlesiewski.simpledi.processors.BeanAnnotationProcessor;
 import mlesiewski.simpledi.processors.CustomScopeAnnotationProcessor;
@@ -11,6 +12,7 @@ import mlesiewski.simpledi.writer.GeneratedCodeWriter;
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
+import java.util.Collection;
 import java.util.Set;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
@@ -52,10 +54,11 @@ public class SimpleDiProcessor extends AbstractProcessor {
             // 4. process @CustomScope annotations - just garter types
             customScopeAnnotationProcessor.process(roundEnv);
             if (roundEnv.processingOver()) {
+                Collection<GeneratedCode> registrable = collector.registrable();
                 // 4. write source files
-                codeWriter.writeSourceFiles(collector.registrable());
+                codeWriter.writeSourceFiles(registrable);
                 // 5. write Registrable service loader file
-                codeWriter.writeRegistrableServiceLoader(collector.registrable());
+                codeWriter.writeRegistrableServiceLoader(registrable);
                 // 6. write Scope service loader file
                 codeWriter.writeScopeServiceLoader(customScopeAnnotationProcessor.scopes());
             }

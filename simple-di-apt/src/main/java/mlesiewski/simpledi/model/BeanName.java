@@ -54,4 +54,9 @@ public final class BeanName {
     public int hashCode() {
         return Objects.hash(name(), scope());
     }
+
+    @Override
+    public String toString() {
+        return String.format("BeanName{%s, %s}", name(), scope());
+    }
 }
