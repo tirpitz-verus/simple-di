@@ -75,11 +75,6 @@ public class GeneratedCodeWriter {
                         })
                         .collect(Collectors.joining(", "));
                 params.put("constructorArguments", constructorArguments);
-
-//                beanEntity.fields;
-
-
-//                beanEntity.setters;
             } else {
                 throw new SimpleDiAptException("could not find template for " + generated.getClass().getName());
             }

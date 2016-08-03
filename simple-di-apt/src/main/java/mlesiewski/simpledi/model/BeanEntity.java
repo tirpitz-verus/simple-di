@@ -52,6 +52,13 @@ public class BeanEntity {
     }
 
     /**
+     * @return {@code true} if scope was not assigned to this bean.
+     */
+    public boolean defaultScope() {
+        return Objects.equals(scope, _Default.VALUE);
+    }
+
+    /**
      * @param name Name of this bean.
      */
     public void name(String name) {
