@@ -63,7 +63,7 @@ public class GeneratedCodeCollector {
             current.forEachDependant(node -> visit(node, output));
             current.visited = true;
             current.mark = false;
-            output.addLast(current);
+            output.addFirst(current);
         }
     }
 
@@ -86,7 +86,7 @@ public class GeneratedCodeCollector {
         }
 
         private boolean dependsOn(Node node) {
-            return provider.hardDependencies().contains(node.provider.beanName());
+            return node.provider.hardDependencies().contains(provider.beanName());
         }
 
         BeanProviderEntity provider() {

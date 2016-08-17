@@ -13,6 +13,19 @@ public class GeneratedCodeCollectorTest {
     private GeneratedCodeCollector collector;
 
     @Test
+    public void returnsManyDependendantsInTopologicalOrder() throws Exception {
+        // given
+        BeanEntity son = createBeanEntity("son");
+        BeanEntity daughter = createBeanEntity("daughter");
+        BeanEntity father = createBeanEntity("father");
+        // when
+        son.hardDependency(father.beanName());
+        daughter.hardDependency(father.beanName());
+        // then
+        assertThat(collector, returnsRegistrableInOrder(father, son, daughter));
+    }
+
+    @Test
     public void returnsLinearDependenciesRegistrableInTopologicalOrder() throws Exception {
         // given
         BeanEntity son = createBeanEntity("son");
@@ -35,7 +48,7 @@ public class GeneratedCodeCollectorTest {
         son.hardDependency(mother.beanName());
         son.hardDependency(father.beanName());
         // then
-        assertThat(collector, returnsRegistrableInOrder(father, mother, son));
+        assertThat(collector, returnsRegistrableInOrder(mother, father, son));
     }
 
     @Test
@@ -52,7 +65,7 @@ public class GeneratedCodeCollectorTest {
         father.hardDependency(fathersMother.beanName());
         son.hardDependency(mother.beanName());
         // then
-        assertThat(collector, returnsRegistrableInOrder(fathersMother, fathersFather, father, mother, son));
+        assertThat(collector, returnsRegistrableInOrder(fathersFather, fathersMother, mother, father, son));
     }
 
     @Test(expectedExceptions = SimpleDiAptException.class, expectedExceptionsMessageRegExp = ".*cycle.*")
