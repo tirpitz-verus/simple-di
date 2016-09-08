@@ -26,7 +26,7 @@ public class BeanAnnotationProcessor {
      * @param roundEnv elements to process
      */
     public void process(RoundEnvironment roundEnv) {
-        roundEnv.getElementsAnnotatedWith(Bean.class).stream().forEach(this::processElement);
+        roundEnv.getElementsAnnotatedWith(Bean.class).forEach(this::processElement);
     }
 
     /** processes one element */

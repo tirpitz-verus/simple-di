@@ -12,6 +12,20 @@ public class GeneratedCodeCollectorTest {
 
     private GeneratedCodeCollector collector;
 
+    @Test(expectedExceptions = SimpleDiAptException.class, expectedExceptionsMessageRegExp = ".*already registered.*")
+    public void throwsErrorWhenTryingToRegisterTheSameTypeNameTwice() throws Exception {
+        // given
+        ClassEntity c = new ClassEntity("mlesiewski", "SameClass");
+        BeanEntity e1 = BeanEntity.builder().from(c).withName("e1").build();
+        BeanProviderEntity p1 = new BeanProviderEntity(e1);
+        BeanEntity e2 = BeanEntity.builder().from(c).withName("e2").build();
+        BeanProviderEntity p2 = new BeanProviderEntity(e2);
+        // when
+        collector.registrable(p1);
+        collector.registrable(p2);
+        // then - error
+    }
+
     @Test
     public void returnsManyDependendantsInTopologicalOrder() throws Exception {
         // given

@@ -133,9 +133,19 @@ public class BeanEntity {
         fields.put(fieldName, beanName);
     }
 
+    /** @return soft dependencies accessed by fields */
+    public Map<String, BeanName> fields() {
+        return new HashMap<>(fields);
+    }
+
     /** sets a soft dependency on a setter method */
     public void setter(String methodName, BeanName beanName) {
         setters.put(methodName, beanName);
+    }
+
+    /** @return soft dependencies accessed by setters */
+    public Map<String, BeanName> setters() {
+        return new HashMap<>(setters);
     }
 
     /** sets a hard dependency - constructor injection

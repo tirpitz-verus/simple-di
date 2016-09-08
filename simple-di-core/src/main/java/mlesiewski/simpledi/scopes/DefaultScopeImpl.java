@@ -62,6 +62,7 @@ public class DefaultScopeImpl implements Scope {
             @SuppressWarnings("unchecked")
             BeanProvider<T> provider = providers.get(name);
             bean = provider.provide();
+            provider.setSoftDependencies(bean);
         } catch (ClassCastException ccs) {
             throw new SimpleDiException("In Scope '" + getName() + "' BeanProvider '" + name + "' produced a value with a wrong type", ccs);
         }

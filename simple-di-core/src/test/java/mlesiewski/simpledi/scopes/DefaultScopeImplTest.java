@@ -1,9 +1,11 @@
 package mlesiewski.simpledi.scopes;
 
 import mlesiewski.simpledi.SimpleDiException;
+import mlesiewski.simpledi.testutils.TestBeanProvider;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static mlesiewski.simpledi.testutils.NewObjectProvider.NEW_OBJECT_PROVIDER;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -12,9 +14,11 @@ import static org.testng.Assert.assertFalse;
 
 public class DefaultScopeImplTest {
 
-    static final Object BEAN = new Object();
-    DefaultScopeImpl scope;
-    int timesBeanWasProvided = 0;
+    private static final Object BEAN = new Object();
+    private static final TestBeanProvider<Object> TEST_BEAN_PROVIDER = new TestBeanProvider<>(() -> BEAN);
+
+    private DefaultScopeImpl scope;
+    private int timesBeanWasProvided = 0;
 
     @Test
     public void doesNotHaveAnUnregisteredBean() throws Exception {
@@ -30,7 +34,7 @@ public class DefaultScopeImplTest {
     public void hasARegisteredBeanWhenStated() throws Exception {
         // given
         String name = "registered";
-        scope.register(Object::new, name);
+        scope.register(NEW_OBJECT_PROVIDER, name);
         scope.start();
         // when
         boolean hasBean = scope.hasBean(name);
@@ -51,7 +55,7 @@ public class DefaultScopeImplTest {
     public void throwsExceptionIfGettingBeanAndNotStarted() throws Exception {
         // given
         String name = "registered";
-        scope.register(Object::new, name);
+        scope.register(NEW_OBJECT_PROVIDER, name);
         scope.end();
         // when
         scope.getBean(name);
@@ -62,7 +66,7 @@ public class DefaultScopeImplTest {
     public void returnsRegisteredBeanWhenStated() throws Exception {
         // given
         String name = "registered";
-        scope.register(() -> BEAN, name);
+        scope.register(TEST_BEAN_PROVIDER, name);
         scope.start();
         // when
         Object bean = scope.getBean(name);
@@ -74,7 +78,7 @@ public class DefaultScopeImplTest {
     public void doesNotHaveARegisteredBeanWhenNotStated() throws Exception {
         // given
         String name = "registered";
-        scope.register(Object::new, name);
+        scope.register(NEW_OBJECT_PROVIDER, name);
         scope.end();
         // when
         boolean hasBean = scope.hasBean(name);
@@ -87,7 +91,7 @@ public class DefaultScopeImplTest {
         // given
         String name = "bean";
         scope.beanCache.put(name, BEAN);
-        scope.register(() -> BEAN, name);
+        scope.register(TEST_BEAN_PROVIDER, name);
         scope.start();
         // when
         scope.getBean(name);

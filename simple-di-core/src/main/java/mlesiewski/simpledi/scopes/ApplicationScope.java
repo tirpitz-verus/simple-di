@@ -7,13 +7,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
- * Global application scope - beans will be created eagerly. This scope is created started and will not end.
+ * Global application scope - beans will be created eagerly after this scope was started.
+ * Beans based on this scope should not have hard (constructor) dependencies on beans from other scopes.
  */
 public class ApplicationScope extends DefaultScopeImpl {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationScope.class);
+
+    /** {@link BeanProvider BeanProviders} waiting for {@link #start()}. */
+    private LinkedHashMap<String, BeanProvider> waitingProviders = new LinkedHashMap<>();
 
     /** Ties a {@link Bean} to the application scope. */
     public static final String NAME = "mlesiewski.simpledi.Scope.APP_SCOPE";
@@ -21,16 +26,29 @@ public class ApplicationScope extends DefaultScopeImpl {
     /** Strongly referenced eager bean cache. */
     final HashMap<String, Object> eagerBeanCache = new HashMap<>();
 
-    /** Creates new Application Scope and starts it. */
+    /**
+     * Creates new Application Scope. Can now register new {@link BeanProvider BeanProvider's} that won't be called
+     * until {@link #start()}.
+     */
     public ApplicationScope() {
         super(NAME);
-        super.start();
     }
 
-    /** @throws SimpleDiException always */
+    /**
+     * Calls all previously registered {@link BeanProvider BeanProvider's}.
+     * Any new {@link BeanProvider BeanProvider's} will be called eagerly and discarded.
+     */
     @Override
     public void start() {
-        throw new SimpleDiException(NAME + " cannot be started");
+        super.start();
+        waitingProviders.forEach(this::cacheBeanInstance);
+        waitingProviders.forEach(this::setSoftDependencies);
+        waitingProviders = null;
+    }
+
+    private <T> void setSoftDependencies(String name, BeanProvider<T> beanProvider) {
+        T bean = getBean(name);
+        beanProvider.setSoftDependencies(bean);
     }
 
     /** @throws SimpleDiException always */
@@ -39,18 +57,32 @@ public class ApplicationScope extends DefaultScopeImpl {
         throw new SimpleDiException(NAME + " cannot be ended");
     }
 
-    /** Calls {@link BeanProvider#provide()} immediately. */
+    /**
+     * If the scope was instantiated then it schedules calling of {@link BeanProvider#provide()} for the moment of
+     * {@link #start()} being called. It the scope was already started then calls {@link BeanProvider#provide()}
+     * immediately.
+     */
     @Override
     public <T> void register(BeanProvider<T> beanProvider, String name) {
         LOGGER.trace("register({}, {})", beanProvider, name);
+        if (started) {
+            T bean = cacheBeanInstance(name, beanProvider);
+            beanProvider.setSoftDependencies(bean);
+        } else {
+            waitingProviders.put(name, beanProvider);
+        }
+    }
+
+    private <T> T cacheBeanInstance(String name, BeanProvider<T> beanProvider) {
         if (eagerBeanCache.containsKey(name)) {
-            throw new SimpleDiException("Scope '" + getName() + "' already has a BeanProvider instance registered under the name '" + name + "'");
+            throw new SimpleDiException("Scope '" + getName() + "' already has a Bean instance registered under the name '" + name + "'");
         }
         T bean = beanProvider.provide();
         if (bean == null) {
             throw new SimpleDiException("In Scope '" + getName() + "' BeanProvider '" + name + "' produced a null value");
         }
         eagerBeanCache.put(name, bean);
+        return bean;
     }
 
     /** Gets {@link Bean} from the eager bean cache. */

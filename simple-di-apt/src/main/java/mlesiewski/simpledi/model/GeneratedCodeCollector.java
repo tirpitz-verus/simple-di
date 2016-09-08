@@ -14,7 +14,8 @@ import java.util.stream.Collectors;
 public class GeneratedCodeCollector {
 
     /** bean providers */
-    private final HashMap<BeanName, BeanProviderEntity> providers = new HashMap<>();
+    private final HashMap<BeanName, BeanProviderEntity> providersByBeanName = new HashMap<>();
+    private final HashMap<String, BeanProviderEntity> providersByTypeName = new HashMap<>();
 
     /**
      * Collects new {@link BeanProviderEntity} instance.
@@ -24,25 +25,33 @@ public class GeneratedCodeCollector {
      * @param provider instance to collect
      */
     public void registrable(BeanProviderEntity provider) {
-        if (!providers.containsKey(provider.beanName())) {
-            providers.put(provider.beanName(), provider);
+        BeanName beanName = provider.beanName();
+        if (!providersByBeanName.containsKey(beanName)) {
+            String typeName = provider.typeName();
+            if (providersByTypeName.containsKey(typeName)) {
+                BeanName conflictingBeanName = providersByTypeName.get(typeName).beanName();
+                String msg = String.format("Cannot register provider for bean name '%s'. A bean provider entity that would result in the type name '%s' was already registered under name '%s'",  beanName, typeName, conflictingBeanName);
+                throw new SimpleDiAptException(msg);
+            }
+            providersByBeanName.put(beanName, provider);
+            providersByTypeName.put(typeName, provider);
         }
     }
 
     /** @return true if a {@link BeanProviderEntity} for the {@link BeanName} provided was registered*/
     public boolean hasBean(BeanName beanName) {
-        return providers.containsKey(beanName);
+        return providersByBeanName.containsKey(beanName);
     }
 
     /** @return {@link BeanEntity} that is beaning provided by the {@link BeanProviderEntity} registered under the {@link BeanName} provided */
     public BeanEntity getBean(BeanName beanName) {
-        return providers.get(beanName).beanEntity();
+        return providersByBeanName.get(beanName).beanEntity();
     }
 
     /** @return a collection of {@link GeneratedCode} instances */
     public Collection<GeneratedCode> registrable() {
-        HashMap<BeanName, Node> nodes = new HashMap<>(providers.size());
-        for (BeanProviderEntity providerEntity : providers.values()) {
+        HashMap<BeanName, Node> nodes = new HashMap<>(providersByBeanName.size());
+        for (BeanProviderEntity providerEntity : providersByBeanName.values()) {
             new Node(providerEntity, nodes);
         }
 

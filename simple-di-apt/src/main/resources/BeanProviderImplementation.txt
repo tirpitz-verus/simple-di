@@ -13,7 +13,10 @@ public class {{beanProviderSimpleName}} implements BeanProvider<{{beanType}}>, R
     }
 
     public {{beanType}} provide() {
-        {{beanType}} bean = new {{beanType}}({{constructorArguments}});
-        return bean;
+        return new {{beanType}}({{constructorArguments}});
+    }
+
+    public void setSoftDependencies({{beanType}} bean) {
+        {{softDependencies}}
     }
 }

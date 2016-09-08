@@ -75,6 +75,28 @@ public class GeneratedCodeWriter {
                         })
                         .collect(Collectors.joining(", "));
                 params.put("constructorArguments", constructorArguments);
+
+                @SuppressWarnings("unchecked")
+                StringBuilder softDependencies = new StringBuilder();
+                beanEntity.fields().forEach((field, dependency) -> {
+                    softDependencies.append("bean.").append(field).append(" = ");
+                    softDependencies.append("BeanRegistry.getBean(\"").append(dependency.name()).append("\"");
+                    if (!beanEntity.defaultScope()) {
+                        softDependencies.append(", \"").append(dependency.scope()).append("\"");
+                    }
+                    softDependencies.append(")");
+                    softDependencies.append(";\n\t\t");
+                });
+                beanEntity.setters().forEach((setter, dependency) -> {
+                    softDependencies.append("bean.").append(setter).append("(");
+                    softDependencies.append("BeanRegistry.getBean(\"").append(dependency.name()).append("\"");
+                    if (!beanEntity.defaultScope()) {
+                        softDependencies.append(", \"").append(dependency.scope()).append("\"");
+                    }
+                    softDependencies.append(")");
+                    softDependencies.append(");\n\t\t");
+                });
+                params.put("softDependencies", softDependencies.toString());
             } else {
                 throw new SimpleDiAptException("could not find template for " + generated.getClass().getName());
             }

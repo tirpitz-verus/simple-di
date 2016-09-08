@@ -24,6 +24,7 @@ public final class BeanRegistry {
     static void init() {
         DELEGATE = new BeanRegistryImpl();
         Bootstrapper.bootstrap();
+        DELEGATE.startEagerScopes();
     }
 
     /**

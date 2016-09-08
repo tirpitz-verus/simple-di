@@ -26,7 +26,7 @@ public class CustomScopeAnnotationProcessor {
 
     /** @param roundEnv environment to get annotated {@link Element Elements} from */
     public void process(RoundEnvironment roundEnv) {
-        roundEnv.getElementsAnnotatedWith(CustomScope.class).stream().forEach(this::processElement);
+        roundEnv.getElementsAnnotatedWith(CustomScope.class).forEach(this::processElement);
     }
 
     /** @return names of all the valid elements processed */

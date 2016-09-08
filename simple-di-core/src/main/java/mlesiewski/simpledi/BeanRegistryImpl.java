@@ -2,7 +2,6 @@ package mlesiewski.simpledi;
 
 import mlesiewski.simpledi.scopes.ApplicationScope;
 import mlesiewski.simpledi.scopes.Scope;
-import mlesiewski.simpledi.scopes.ToggledScope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,9 +27,6 @@ class BeanRegistryImpl {
         register(appScope);
         // default scope
         DEFAULT_SCOPE = appScope.getName();
-        // toggleScope
-        Scope toggleScope = new ToggledScope();
-        register(toggleScope);
     }
 
     /**
@@ -153,5 +149,11 @@ class BeanRegistryImpl {
      */
     <T> void register(BeanProvider<T> beanProvider, Class<T> beanProviderName) {
         register(beanProvider, beanProviderName.getName());
+    }
+
+    /** starts eager scopes so that they can be instantiated with their hard dependencies */
+    void startEagerScopes() {
+        // only one such scope
+        scopes.get(DEFAULT_SCOPE).start();
     }
 }
