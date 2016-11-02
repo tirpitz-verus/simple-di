@@ -1,7 +1,7 @@
 package mlesiewski.simpledi.scopes;
 
-import mlesiewski.simpledi.BeanProvider;
 import mlesiewski.simpledi.SimpleDiException;
+import mlesiewski.simpledi.testutils.NewObjectProvider;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -24,7 +24,7 @@ public class ApplicationScopeTest {
     @Test
     public void startCallsRegisteredProviders() throws Exception {
         // given
-        ObjectProvider provider = new ObjectProvider();
+        NewObjectProvider provider = new NewObjectProvider();
 
         // when
         applicationScope.register(provider, "name");
@@ -53,22 +53,5 @@ public class ApplicationScopeTest {
     @BeforeMethod
     public void setUp() throws Exception {
         applicationScope = new ApplicationScope();
-    }
-}
-
-class ObjectProvider implements BeanProvider<Object> {
-
-    boolean provideCalled;
-    boolean softDependenciesSet;
-
-    @Override
-    public Object provide() {
-        provideCalled = true;
-        return new Object();
-    }
-
-    @Override
-    public void setSoftDependencies(Object newInstance) {
-        softDependenciesSet = true;
     }
 }

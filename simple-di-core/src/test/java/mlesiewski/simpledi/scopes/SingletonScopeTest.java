@@ -1,7 +1,7 @@
 package mlesiewski.simpledi.scopes;
 
-
 import mlesiewski.simpledi.SimpleDiException;
+import mlesiewski.simpledi.testutils.NewObjectProvider;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -24,7 +24,7 @@ public class SingletonScopeTest {
     @Test
     public void beansAreNotInstantiatedUntilNeeded() throws Exception {
         // given
-        ObjectProvider objectProvider = new ObjectProvider();
+        NewObjectProvider objectProvider = new NewObjectProvider();
         String name = "name";
         // when
         singletonScope.register(objectProvider, name);
