@@ -14,15 +14,9 @@ public class ProducedBeanProviderEntity extends BeanProviderEntity implements Ge
      * @param producerMethod name of the method of beanProducer that produces producedBean instances
      */
     public ProducedBeanProviderEntity(BeanEntity producedBean, BeanEntity beanProducer, String producerMethod) {
-        super(producedBean.packageName(), calculateSimpleName(producedBean), producedBean);
+        super(producedBean, "Wrapper");
         this.beanProducer = beanProducer;
         this.producerMethod = producerMethod;
-    }
-
-    private static String calculateSimpleName(BeanEntity producedBean) {
-        String name = producedBean.defaultName() ? producedBean.simpleName() : producedBean.name();
-        String scope = producedBean.defaultScope() ? "" : producedBean.scope();
-        return name + scope + "Wrapper";
     }
 
     public String producerMethod() {

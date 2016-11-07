@@ -4,7 +4,6 @@ import mlesiewski.simpledi.Logger;
 import mlesiewski.simpledi.SimpleDiAptException;
 import mlesiewski.simpledi.annotations.Bean;
 import mlesiewski.simpledi.annotations.Inject;
-import mlesiewski.simpledi.annotations._Default;
 import mlesiewski.simpledi.model.*;
 
 import javax.annotation.processing.RoundEnvironment;
@@ -82,7 +81,7 @@ public class InjectAnnotationProcessor {
         }
 
         Inject annotation = parameter.getAnnotation(Inject.class);
-        BeanName paramBeanName = makeBeanName(annotation.name(), annotation.scope(), parameter);
+        BeanName paramBeanName = new BeanName(annotation.name(), annotation.scope());
         String paramName = parameter.getSimpleName().toString();
         beanConstructor.set(paramName, paramBeanName);
 
@@ -96,7 +95,7 @@ public class InjectAnnotationProcessor {
         BeanEntity beanEntity = getEnclosingBeanEntity(field);
 
         Inject annotation = field.getAnnotation(Inject.class);
-        BeanName beanName = makeBeanName(annotation.name(), annotation.scope(), field);
+        BeanName beanName = new BeanName(annotation.name(), annotation.scope());
         String fieldName = field.getSimpleName().toString();
 
         Set<Modifier> modifiers = field.getModifiers();
@@ -153,9 +152,9 @@ public class InjectAnnotationProcessor {
             Inject annotation = parameter.getAnnotation(Inject.class);
             BeanName paramBeanName;
             if (annotation != null) {
-                paramBeanName = makeBeanName(annotation.name(), annotation.scope(), parameter);
+                paramBeanName = new BeanName(annotation.name(), annotation.scope());
             } else {
-                paramBeanName = new BeanName(parameter.asType().toString());
+                paramBeanName = new BeanName();
             }
             beanConstructor.add(paramName, paramBeanName);
             DeclaredType paramType = (DeclaredType) parameter.asType();
@@ -173,9 +172,9 @@ public class InjectAnnotationProcessor {
         Bean annotation = aBeanClass.getAnnotation(Bean.class);
         BeanName beanName;
         if (annotation != null) {
-            beanName = makeBeanName(annotation.name(), annotation.scope(), aBeanClass);
+            beanName = new BeanName(annotation.name(), annotation.scope());
         } else {
-            beanName = new BeanName(aBeanClass.asType().toString());
+            beanName = new BeanName();
         }
         return getBeanEntity(aBeanClass, beanName);
     }
@@ -191,11 +190,5 @@ public class InjectAnnotationProcessor {
             collector.registrable(provider);
             return beanEntity;
         }
-    }
-
-    /** @return correct {@link BeanName} - if name isn't provided it will be derived from the type */
-    private BeanName makeBeanName(String name, String scope, Element element) {
-        String namePart = name.equals(_Default.VALUE) ? element.asType().toString() : name;
-        return new BeanName(namePart, scope);
     }
 }

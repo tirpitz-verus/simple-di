@@ -15,4 +15,8 @@ public class {{beanProviderSimpleName}} implements BeanProvider<{{beanType}}>, R
     public {{beanType}} provide() {
         return BeanRegistry.<{{beanProducerBeanName}}>getBean("{{beanProducerBeanName}}", "{{beanProducerBeanScope}}").{{beanProducerMethod}}();
     }
+
+    public void setSoftDependencies({{beanType}} bean) {
+        // empty
+    }
 }

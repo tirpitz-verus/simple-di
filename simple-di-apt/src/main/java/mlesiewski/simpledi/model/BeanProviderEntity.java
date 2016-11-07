@@ -10,12 +10,11 @@ public class BeanProviderEntity extends ClassEntity implements GeneratedCode {
     private final BeanEntity beanEntity;
 
     /**
-     * @param packageName package name of the represented class
-     * @param simpleName simple name of the represented class
      * @param beanEntity a bean that is going to be provided by this entity
+     * @param simpleNamePostfix postfix appended to the represented class simple name
      */
-    protected BeanProviderEntity(String packageName, String simpleName, BeanEntity beanEntity) {
-        super(packageName, simpleName);
+    protected BeanProviderEntity(BeanEntity beanEntity, String simpleNamePostfix) {
+        super(beanEntity.packageName(), simpleNameOf(beanEntity, simpleNamePostfix));
         this.beanEntity = beanEntity;
     }
 
@@ -23,7 +22,7 @@ public class BeanProviderEntity extends ClassEntity implements GeneratedCode {
      * @param beanEntity a bean that is going to be provided by this entity
      */
     public BeanProviderEntity(BeanEntity beanEntity) {
-        super(beanEntity.packageName(), beanEntity.simpleName() + "Provider");
+        super(beanEntity.packageName(), simpleNameOf(beanEntity, "Provider"));
         this.beanEntity = beanEntity;
     }
 
@@ -41,7 +40,18 @@ public class BeanProviderEntity extends ClassEntity implements GeneratedCode {
         return beanEntity().beanName();
     }
 
+    /** @return set of hard (constructor injected) dependencies */
     public Set<BeanName> hardDependencies() {
         return beanEntity.hardDependencies();
     }
+
+    /**
+     * @return simple name for the provider implementation represented by this entity
+     */
+    private static String simpleNameOf(BeanEntity producedBean, String simpleNamePostfix) {
+        String name = producedBean.defaultName() ? producedBean.simpleName() : producedBean.name();
+        String scope = producedBean.defaultScope() ? "" : producedBean.scope();
+        return name + scope + simpleNamePostfix;
+    }
+
 }

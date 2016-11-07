@@ -96,7 +96,7 @@ public class GeneratedCodeWriter {
                     softDependencies.append(")");
                     softDependencies.append(");\n\t\t");
                 });
-                params.put("softDependencies", softDependencies.toString());
+                params.put("softDependencies", softDependencies.length() != 0 ? softDependencies.toString() : "//empty");
             } else {
                 throw new SimpleDiAptException("could not find template for " + generated.getClass().getName());
             }
