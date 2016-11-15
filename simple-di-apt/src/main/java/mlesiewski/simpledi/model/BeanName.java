@@ -17,8 +17,8 @@ public final class BeanName {
         this.scope = scope;
     }
 
-    public BeanName(String name) {
-        this.name = name;
+    public BeanName() {
+        this.name = _Default.VALUE;
         this.scope = _Default.VALUE;
     }
 

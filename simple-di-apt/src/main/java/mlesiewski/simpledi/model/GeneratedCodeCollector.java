@@ -18,7 +18,6 @@ public class GeneratedCodeCollector {
 
     /**
      * Collects new {@link BeanProviderEntity} instance.
-     * It cannot be overwritten.
      * Provider once inserted cannot be overwritten.
      *
      * @param provider instance to collect
