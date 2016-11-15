@@ -11,7 +11,7 @@ public class FieldInjectionClient {
     @Inject()
     BeanInjectedByType defaultScopeByType;
 
-    @Inject(name = "bean_injected_by_name", scope = TestScope.NAME)
+    @Inject(name = "test_bean_injected_by_name", scope = TestScope.NAME)
     BeanInjectedByName scopedByName;
 
     @Inject(scope = TestScope.NAME)

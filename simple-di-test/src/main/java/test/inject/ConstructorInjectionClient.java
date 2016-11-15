@@ -13,7 +13,7 @@ public class ConstructorInjectionClient {
     public ConstructorInjectionClient(
             @Inject(name = "bean_injected_by_name") BeanInjectedByName defaultScopeByName,
             @Inject BeanInjectedByType defaultScopeByType,
-            @Inject(name = "bean_injected_by_name", scope = TestScope.NAME) BeanInjectedByName scopedByName,
+            @Inject(name = "test_bean_injected_by_name", scope = TestScope.NAME) BeanInjectedByName scopedByName,
             @Inject(scope = TestScope.NAME) BeanInjectedByType scopedByType) {
         this.defaultScopeByName = defaultScopeByName;
         this.defaultScopeByType = defaultScopeByType;
