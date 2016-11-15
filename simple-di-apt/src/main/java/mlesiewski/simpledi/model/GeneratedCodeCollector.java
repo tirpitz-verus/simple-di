@@ -15,7 +15,6 @@ public class GeneratedCodeCollector {
 
     /** bean providers */
     private final HashMap<BeanName, BeanProviderEntity> providersByBeanName = new HashMap<>();
-    private final HashMap<String, BeanProviderEntity> providersByTypeName = new HashMap<>();
 
     /**
      * Collects new {@link BeanProviderEntity} instance.
@@ -25,17 +24,7 @@ public class GeneratedCodeCollector {
      * @param provider instance to collect
      */
     public void registrable(BeanProviderEntity provider) {
-        BeanName beanName = provider.beanName();
-        if (!providersByBeanName.containsKey(beanName)) {
-            String typeName = provider.typeName();
-            if (providersByTypeName.containsKey(typeName)) {
-                BeanName conflictingBeanName = providersByTypeName.get(typeName).beanName();
-                String msg = String.format("Cannot register provider for bean name '%s'. A bean provider entity that would result in the type name '%s' was already registered under name '%s'",  beanName, typeName, conflictingBeanName);
-                throw new SimpleDiAptException(msg);
-            }
-            providersByBeanName.put(beanName, provider);
-            providersByTypeName.put(typeName, provider);
-        }
+        providersByBeanName.putIfAbsent(provider.beanName(), provider);
     }
 
     /** @return true if a {@link BeanProviderEntity} for the {@link BeanName} provided was registered*/
