@@ -49,9 +49,9 @@ public class BeanProviderEntity extends ClassEntity implements GeneratedCode {
      * @return simple name for the provider implementation represented by this entity
      */
     private static String simpleNameOf(BeanEntity producedBean, String simpleNamePostfix) {
-        String name = producedBean.defaultName() ? producedBean.simpleName() : producedBean.name();
+        String name = producedBean.defaultName() ? producedBean.simpleName().replaceAll(producedBean.packageName() + "\\.", "") : producedBean.name();
         String scope = producedBean.defaultScope() ? "" : producedBean.scope();
-        return name + scope + simpleNamePostfix;
+        return name + scope.replaceAll("\\.", "_") + simpleNamePostfix;
     }
 
 }

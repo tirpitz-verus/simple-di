@@ -75,17 +75,17 @@ public class InjectAnnotationProcessor {
             beanEntity.constructor(beanConstructor);
         } else {
             beanConstructor = beanEntity.constructor();
-            if (!beanConstructor.equals(constructor)) {
+            if (beanConstructor.hasDifferentParametersTo(constructor)) {
                 throw new SimpleDiAptException("a bean can have only one injection constructor", parameter);
             }
         }
 
         Inject annotation = parameter.getAnnotation(Inject.class);
-        BeanName paramBeanName = new BeanName(annotation.name(), annotation.scope());
+        DeclaredType injectedType = (DeclaredType) parameter.asType();
+        BeanName paramBeanName = new BeanName(annotation, injectedType);
         String paramName = parameter.getSimpleName().toString();
         beanConstructor.set(paramName, paramBeanName);
 
-        DeclaredType injectedType = (DeclaredType) parameter.asType();
         registerInjected(paramBeanName, injectedType);
     }
 
@@ -95,7 +95,8 @@ public class InjectAnnotationProcessor {
         BeanEntity beanEntity = getEnclosingBeanEntity(field);
 
         Inject annotation = field.getAnnotation(Inject.class);
-        BeanName beanName = new BeanName(annotation.name(), annotation.scope());
+        DeclaredType declaredType = (DeclaredType) field.asType();
+        BeanName beanName = new BeanName(annotation, declaredType);
         String fieldName = field.getSimpleName().toString();
 
         Set<Modifier> modifiers = field.getModifiers();
@@ -120,7 +121,7 @@ public class InjectAnnotationProcessor {
         if (!collector.hasBean(beanName)) {
             Validators.validBeanConstructor(injectedType);
             ClassEntity injectedClassEntity = ClassEntity.from(injectedType);
-            BeanEntity injectedEntity = BeanEntity.builder().from(injectedClassEntity).withName(beanName.name()).withScope(beanName.scope()).build();
+            BeanEntity injectedEntity = BeanEntity.builder().from(injectedClassEntity).withName(beanName.nameFromAnnotation()).withScope(beanName.scopeFromAnnotation()).build();
             BeanProviderEntity provider = new BeanProviderEntity(injectedEntity);
             collector.registrable(provider);
         }
@@ -150,14 +151,14 @@ public class InjectAnnotationProcessor {
             Validators.isNotAPrimitive(parameter, Inject.class);
             String paramName = parameter.getSimpleName().toString();
             Inject annotation = parameter.getAnnotation(Inject.class);
+            DeclaredType paramType = (DeclaredType) parameter.asType();
             BeanName paramBeanName;
             if (annotation != null) {
-                paramBeanName = new BeanName(annotation.name(), annotation.scope());
+                paramBeanName = new BeanName(annotation, paramType);
             } else {
-                paramBeanName = new BeanName();
+                paramBeanName = new BeanName(paramType);
             }
             beanConstructor.add(paramName, paramBeanName);
-            DeclaredType paramType = (DeclaredType) parameter.asType();
             registerInjected(paramBeanName, paramType);
         });
         boolean throwsExceptions = constructor.getThrownTypes().isEmpty();
@@ -168,13 +169,14 @@ public class InjectAnnotationProcessor {
     /** @return {@link BeanEntity} with a correct name */
     private BeanEntity getEnclosingBeanEntity(Element element) {
         Element aBeanClass = element.getEnclosingElement();
-        Validators.validBeanConstructor((DeclaredType) aBeanClass.asType());
+        DeclaredType declaredType = (DeclaredType) aBeanClass.asType();
+        Validators.validBeanConstructor(declaredType);
         Bean annotation = aBeanClass.getAnnotation(Bean.class);
         BeanName beanName;
         if (annotation != null) {
-            beanName = new BeanName(annotation.name(), annotation.scope());
+            beanName = new BeanName(annotation, declaredType);
         } else {
-            beanName = new BeanName();
+            beanName = new BeanName(declaredType);
         }
         return getBeanEntity(aBeanClass, beanName);
     }
@@ -185,7 +187,7 @@ public class InjectAnnotationProcessor {
             return collector.getBean(beanClassName);
         } else {
             ClassEntity beanClassEntity = ClassEntity.from(beanClass.asType());
-            BeanEntity beanEntity = BeanEntity.builder().from(beanClassEntity).withName(beanClassName.name()).withScope(beanClassName.scope()).build();
+            BeanEntity beanEntity = BeanEntity.builder().from(beanClassEntity).withName(beanClassName.nameFromAnnotation()).withScope(beanClassName.scopeFromAnnotation()).build();
             BeanProviderEntity provider = new BeanProviderEntity(beanEntity);
             collector.registrable(provider);
             return beanEntity;

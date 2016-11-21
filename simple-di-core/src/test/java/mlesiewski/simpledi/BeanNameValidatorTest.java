@@ -22,6 +22,7 @@ public class BeanNameValidatorTest {
                 {"aa~", false},
                 {"aa%^%^", false},
                 {"              ", false},
+                {"a.a", false},
                 {"Fine-Name_it_15", true},
                 {"aaaa", true},
                 {"AAAA", true},

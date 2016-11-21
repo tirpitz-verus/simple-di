@@ -1,7 +1,13 @@
 package mlesiewski.simpledi.model;
 
+import mlesiewski.simpledi.annotations.Inject;
+
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.DeclaredType;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -71,5 +77,48 @@ public class BeanConstructor {
 
     public Collection<BeanName> list() {
         return parameters.values();
+    }
+
+    public boolean hasDifferentParametersTo(ExecutableElement constructor) {
+        List<? extends VariableElement> parameters = constructor.getParameters();
+        if (parameters.size() != this.parameters.size()) {
+            return true;
+        }
+        CounterWrapper i = new CounterWrapper();
+        ResultWrapper result = new ResultWrapper();
+        this.parameters.forEach((name, beanName) -> {
+            VariableElement parameter = parameters.get(i.param);
+            if (!parameter.getSimpleName().toString().equals(name)) {
+                result.isTrue();
+            } else {
+                Inject annotation = parameter.getAnnotation(Inject.class);
+                DeclaredType paramType = (DeclaredType) parameter.asType();
+                BeanName paramBeanName;
+                if (annotation != null) {
+                    paramBeanName = new BeanName(annotation, paramType);
+                } else {
+                    paramBeanName = new BeanName(paramType);
+                }
+                if (!paramBeanName.equals(beanName)) {
+                    result.isTrue();
+                } else if (!paramBeanName.nameFromType().equals(beanName.nameFromType())) {
+                    result.isTrue();
+                }
+            }
+            i.param++;
+        });
+        return result.value;
+    }
+
+    private class CounterWrapper {
+        int param;
+    }
+
+    private class ResultWrapper {
+        boolean value = false;
+
+        void isTrue() {
+            value = true;
+        }
     }
 }

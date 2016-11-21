@@ -41,21 +41,21 @@ public class BeanEntity {
      * @return Name of this bean that was assigned to it or a default value (type name of the Java class denoted by this bean).
      */
     public String name() {
-        return defaultName() ? typeName() : name;
+        return beanName().name();
     }
 
     /**
      * @return {@code true} if name was not assigned to this bean.
      */
     public boolean defaultName() {
-        return Objects.equals(name, _Default.VALUE);
+        return beanName().nameIsDefault();
     }
 
     /**
      * @return {@code true} if scope was not assigned to this bean.
      */
     public boolean defaultScope() {
-        return Objects.equals(scope, _Default.VALUE);
+        return beanName().scopeIsDefault();
     }
 
     /**
@@ -69,7 +69,7 @@ public class BeanEntity {
      * @return Scope of this bean that was assigned to it or a default value ({@link BeanRegistry#defaultScope()}).
      */
     public String scope() {
-        return Objects.equals(scope, _Default.VALUE) ? BeanRegistry.defaultScope() : scope;
+        return beanName().scope();
     }
 
     /**
@@ -103,7 +103,7 @@ public class BeanEntity {
     /**
      * @return name of this bean
      */
-    public BeanName beanName() { return new BeanName(name(), scope()); }
+    public BeanName beanName() { return new BeanName(name, scope, classEntity.typeName()); }
 
     /** @return constructor for this bean */
     public BeanConstructor constructor() {
