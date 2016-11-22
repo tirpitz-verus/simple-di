@@ -11,8 +11,6 @@ import org.slf4j.LoggerFactory;
  */
 public class SingletonScope extends DefaultScopeImpl {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SingletonScope.class);
-
     /** Ties a {@link Bean} to the application scope. */
     public static final String NAME = "mlesiewski.simpledi.Scope.SING_SCOPE";
 
