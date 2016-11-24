@@ -8,7 +8,7 @@ public class InjectionClient {
     @Inject
     UnnamedBean unnamedBean;
 
-    @Inject(name = UnnamedBeanProducer.NAMED_B)
+    @Inject(name = UnnamedBeanProducer.NAMED_A)
     UnnamedBean namedBeanA;
 
     @Inject(name = UnnamedBeanProducer.NAMED_B)
