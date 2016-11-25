@@ -81,7 +81,7 @@ public class GeneratedCodeWriter {
                 beanEntity.fields().forEach((field, dependency) -> {
                     softDependencies.append("bean.").append(field).append(" = ");
                     softDependencies.append("BeanRegistry.getBean(\"").append(dependency.name()).append("\"");
-                    if (!beanEntity.defaultScope()) {
+                    if (!dependency.scopeIsDefault()) {
                         softDependencies.append(", \"").append(dependency.scope()).append("\"");
                     }
                     softDependencies.append(")");
@@ -90,7 +90,7 @@ public class GeneratedCodeWriter {
                 beanEntity.setters().forEach((setter, dependency) -> {
                     softDependencies.append("bean.").append(setter).append("(");
                     softDependencies.append("BeanRegistry.getBean(\"").append(dependency.name()).append("\"");
-                    if (!beanEntity.defaultScope()) {
+                    if (!dependency.scopeIsDefault()) {
                         softDependencies.append(", \"").append(dependency.scope()).append("\"");
                     }
                     softDependencies.append(")");
