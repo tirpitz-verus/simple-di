@@ -3,12 +3,21 @@ package mlesiewski.simpledi.processors;
 import mlesiewski.simpledi.Logger;
 import mlesiewski.simpledi.annotations.Bean;
 import mlesiewski.simpledi.annotations.Produce;
-import mlesiewski.simpledi.model.*;
+import mlesiewski.simpledi.model.BeanEntity;
+import mlesiewski.simpledi.model.BeanProviderEntity;
+import mlesiewski.simpledi.model.ClassEntity;
+import mlesiewski.simpledi.model.GeneratedCodeCollector;
+import mlesiewski.simpledi.model.ProducedBeanProviderEntity;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Process @Produce annotations - creates @Produce Providers.
@@ -16,9 +25,13 @@ import javax.lang.model.type.TypeMirror;
 public class ProduceAnnotationsProcessor {
 
     private final GeneratedCodeCollector generatedCollector;
+    private final Elements elementUtils;
+    private final Types typeUtils;
 
-    public ProduceAnnotationsProcessor(GeneratedCodeCollector generatedCollector) {
+    public ProduceAnnotationsProcessor(GeneratedCodeCollector generatedCollector, ProcessingEnvironment environment) {
         this.generatedCollector = generatedCollector;
+        this.elementUtils = environment.getElementUtils();
+        this.typeUtils = environment.getTypeUtils();
     }
 
     /**
@@ -73,8 +86,16 @@ public class ProduceAnnotationsProcessor {
         BeanEntity producedBean = BeanEntity.builder().from(producedBeanClass).withScope(annotation.scope()).withName(annotation.name()).build();
         producedBean.hardDependency(beanProvider.beanName());
         String producerMethod = method.getSimpleName().toString();
-        ProducedBeanProviderEntity producedBeanProvider = new ProducedBeanProviderEntity(producedBean, beanProvider.beanEntity(), producerMethod);
+        List<String> thrown = method.getThrownTypes().stream().filter(this::isCheckedException).map(TypeMirror::toString).collect(Collectors.toList());
+        ProducedBeanProviderEntity producedBeanProvider = new ProducedBeanProviderEntity(producedBean, beanProvider.beanEntity(), producerMethod, thrown);
         generatedCollector.registrable(producedBeanProvider);
     }
 
+    /**
+     * @return {@code true} if type provided is an unchecked exception
+     */
+    private boolean isCheckedException(TypeMirror typeMirror) {
+        TypeMirror runtimeException = elementUtils.getTypeElement("java.lang.RuntimeException").asType();
+        return !typeUtils.isAssignable(typeMirror, runtimeException);
+    }
 }

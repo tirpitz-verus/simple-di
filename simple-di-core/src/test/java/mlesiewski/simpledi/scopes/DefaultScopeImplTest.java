@@ -2,6 +2,7 @@ package mlesiewski.simpledi.scopes;
 
 import mlesiewski.simpledi.SimpleDiException;
 import mlesiewski.simpledi.testutils.TestBeanProvider;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -115,7 +116,7 @@ public class DefaultScopeImplTest {
 
     @BeforeMethod
     public void setUp() throws Exception {
-        scope = new DefaultScopeImpl("default");
+        scope = new DefaultScopeImpl("default", LoggerFactory.getLogger("DefaultScopeImplTestLogger"));
         timesBeanWasProvided = 0;
     }
 }

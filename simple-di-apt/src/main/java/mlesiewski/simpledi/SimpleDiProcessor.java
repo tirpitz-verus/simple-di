@@ -12,6 +12,7 @@ import mlesiewski.simpledi.writer.GeneratedCodeWriter;
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.Elements;
 import java.util.Collection;
 import java.util.Set;
 
@@ -27,8 +28,8 @@ public class SimpleDiProcessor extends AbstractProcessor {
     private static final boolean ANNOTATIONS_CLAIMED = true;
 
     private GeneratedCodeWriter codeWriter;
+    private ProduceAnnotationsProcessor produceAnnotationsProcessor;
     private final GeneratedCodeCollector collector = new GeneratedCodeCollector();
-    private final ProduceAnnotationsProcessor produceAnnotationsProcessor = new ProduceAnnotationsProcessor(collector);
     private final BeanAnnotationProcessor beanAnnotationProcessor = new BeanAnnotationProcessor(collector);
     private final InjectAnnotationProcessor injectAnnotationProcessor = new InjectAnnotationProcessor(collector);
     private final CustomScopeAnnotationProcessor customScopeAnnotationProcessor = new CustomScopeAnnotationProcessor();
@@ -39,6 +40,7 @@ public class SimpleDiProcessor extends AbstractProcessor {
         Logger.set(processingEnv.getMessager());
         TemplateFactory.set(processingEnv.getFiler());
         codeWriter = new GeneratedCodeWriter(processingEnv.getFiler());
+        produceAnnotationsProcessor = new ProduceAnnotationsProcessor(collector, processingEnv);
     }
 
     @Override

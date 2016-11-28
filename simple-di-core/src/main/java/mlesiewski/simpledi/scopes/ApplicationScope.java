@@ -31,7 +31,7 @@ public class ApplicationScope extends DefaultScopeImpl {
      * until {@link #start()}.
      */
     public ApplicationScope() {
-        super(NAME);
+        super(NAME, LOGGER);
     }
 
     /**

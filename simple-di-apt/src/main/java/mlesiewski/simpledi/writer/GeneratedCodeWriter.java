@@ -55,6 +55,15 @@ public class GeneratedCodeWriter {
                 params.put("beanProducerBeanName", entity.beanProducer().typeName());
                 params.put("beanProducerBeanScope", entity.beanProducer().scope());
                 params.put("beanProducerMethod", entity.producerMethod());
+
+                String tryBlock = "";
+                String catchBlock = "";
+                if (!entity.thrown().isEmpty()) {
+                    tryBlock = "try {";
+                    catchBlock = String.format("} catch (%s e) { throw new SimpleDiException(\"exception wrapped during calling produce() :\" + e.getMessage(), e); }", entity.thrown());
+                }
+                params.put("tryBlock", tryBlock);
+                params.put("catchBlock", catchBlock);
             } else if (generated instanceof BeanProviderEntity) {
                 BeanProviderEntity entity = (BeanProviderEntity) generated;
                 template = TemplateFactory.get("BeanProviderImplementation");

@@ -1,6 +1,7 @@
 package {{beanProviderPackage}};
 
 import javax.annotation.Generated;
+import mlesiewski.simpledi.SimpleDiException;
 import mlesiewski.simpledi.annotations.Registerable;
 import mlesiewski.simpledi.BeanProvider;
 import mlesiewski.simpledi.BeanRegistry;
@@ -13,7 +14,7 @@ public class {{beanProviderSimpleName}} implements BeanProvider<{{beanType}}>, R
     }
 
     public {{beanType}} provide() {
-        return BeanRegistry.<{{beanProducerBeanName}}>getBean("{{beanProducerBeanName}}", "{{beanProducerBeanScope}}").{{beanProducerMethod}}();
+        {{tryBlock}} return BeanRegistry.<{{beanProducerBeanName}}>getBean("{{beanProducerBeanName}}", "{{beanProducerBeanScope}}").{{beanProducerMethod}}(); {{catchBlock}}
     }
 
     public void setSoftDependencies({{beanType}} bean) {

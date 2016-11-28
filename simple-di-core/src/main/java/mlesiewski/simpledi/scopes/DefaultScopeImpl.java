@@ -3,7 +3,6 @@ package mlesiewski.simpledi.scopes;
 import mlesiewski.simpledi.BeanProvider;
 import mlesiewski.simpledi.SimpleDiException;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.WeakHashMap;
@@ -15,22 +14,27 @@ import java.util.WeakHashMap;
  */
 public class DefaultScopeImpl implements Scope {
 
-    protected static final Logger LOGGER = LoggerFactory.getLogger(DefaultScopeImpl.class);
-
+    private final Logger logger;
     protected final String name;
     protected final HashMap<String, BeanProvider> providers = new HashMap<>();
     protected final WeakHashMap<String, Object> beanCache = new WeakHashMap<>();
     protected boolean started = false;
 
-    protected DefaultScopeImpl(String name) {
-        LOGGER.debug("instantiating scope with name '{}'", name);
+//    /** @throws SimpleDiException always as we rely on name and logger being provided during instantiation */
+//    private DefaultScopeImpl() {
+//        throw new SimpleDiException("someone tried to call new DefaultScopeImpl()");
+//    }
+
+    protected DefaultScopeImpl(String name, Logger logger) {
+        this.logger = logger;
         this.name = name;
+        logger.debug("instantiating scope with name '{}'", name);
     }
 
     /** {@inheritDoc} */
     @Override
     public <T> T getBean(String name) {
-        LOGGER.trace("getBean({})", name);
+        logger.trace("getBean({})", name);
         if (!started) {
             throw new SimpleDiException("Scope '" + getName() + "' is not started");
         }
@@ -43,11 +47,11 @@ public class DefaultScopeImpl implements Scope {
 
     /** Returns {@link mlesiewski.simpledi.annotations.Bean} instance from cache. */
     protected <T> T getBeanFromBeans(String name) {
-        LOGGER.trace("getBeanFromBeans({})", name);
+        logger.trace("getBeanFromBeans({})", name);
         @SuppressWarnings("unchecked")
         T bean = (T) beanCache.get(name);
         if (bean == null) {
-            LOGGER.trace("bean not in cache, asking provider");
+            logger.trace("bean not in cache, asking provider");
             bean = provideBean(name);
             beanCache.put(name, bean);
         }
@@ -56,7 +60,7 @@ public class DefaultScopeImpl implements Scope {
 
     /** Calls a provider for a {@link mlesiewski.simpledi.annotations.Bean} instance. */
     protected <T> T provideBean(String name) {
-        LOGGER.trace("provideBean({})", name);
+        logger.trace("provideBean({})", name);
         T bean;
         try {
             @SuppressWarnings("unchecked")
@@ -87,7 +91,7 @@ public class DefaultScopeImpl implements Scope {
     /** {@inheritDoc} */
     @Override
     public <T> void register(BeanProvider<T> beanProvider, String name) {
-        LOGGER.trace("register({}, {})", beanProvider, name);
+        logger.trace("register({}, {})", beanProvider, name);
         if (providers.containsKey(name)) {
             throw new SimpleDiException("Scope '" + getName() + "' already has a BeanProvider instance registered under the name '" + name + "'");
         }
@@ -97,14 +101,14 @@ public class DefaultScopeImpl implements Scope {
     /** {@inheritDoc} */
     @Override
     public void start() {
-        LOGGER.trace("start() on scope '{}'", name);
+        logger.trace("start() on scope '{}'", name);
         started = true;
     }
 
     /** {@inheritDoc} */
     @Override
     public void end() {
-        LOGGER.trace("end() on scope '{}'", name);
+        logger.trace("end() on scope '{}'", name);
         started = false;
     }
 }

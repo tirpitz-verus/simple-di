@@ -2,6 +2,8 @@ package mlesiewski.simpledi;
 
 import mlesiewski.simpledi.annotations.Bean;
 import mlesiewski.simpledi.scopes.Scope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** A class for getting beans from. It actually a static interface to the {@link BeanRegistryImpl}. */
 public final class BeanRegistry {
@@ -22,9 +24,30 @@ public final class BeanRegistry {
      * Gets called in the static initializer.
      */
     static void init() {
-        DELEGATE = new BeanRegistryImpl();
-        Bootstrapper.bootstrap();
-        DELEGATE.startEagerScopes();
+        Logger logger = LoggerFactory.getLogger(BeanRegistry.class);
+        logger.trace("starting BeanRegistry initialization");
+        try {
+            DELEGATE = new BeanRegistryImpl();
+        } catch (Exception e) {
+            String message = "BeanRegistry initialization failed during BeanRegistryImpl instantiation";
+            logger.error(message, e);
+            throw new SimpleDiException(message, e);
+        }
+        try {
+            Bootstrapper.bootstrap();
+        } catch (Exception e) {
+            String message = "BeanRegistry initialization failed during bootstrapping";
+            logger.error(message, e);
+            throw new SimpleDiException(message, e);
+        }
+        try {
+            DELEGATE.startEagerScopes();
+        } catch (Exception e) {
+            String message = "BeanRegistry initialization failed during starting eager scopes";
+            logger.error(message, e);
+            throw new SimpleDiException(message, e);
+        }
+        logger.debug("BeanRegistry initialized");
     }
 
     /**

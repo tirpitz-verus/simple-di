@@ -1,6 +1,7 @@
 package mlesiewski.simpledi;
 
 import mlesiewski.simpledi.scopes.ApplicationScope;
+import mlesiewski.simpledi.scopes.NewInstanceScope;
 import mlesiewski.simpledi.scopes.Scope;
 import mlesiewski.simpledi.scopes.SingletonScope;
 import org.slf4j.Logger;
@@ -30,6 +31,8 @@ class BeanRegistryImpl {
         DEFAULT_SCOPE = appScope.getName();
         // singleton scope
         register(new SingletonScope());
+        // new instance scope
+        register(new NewInstanceScope());
     }
 
     /**
