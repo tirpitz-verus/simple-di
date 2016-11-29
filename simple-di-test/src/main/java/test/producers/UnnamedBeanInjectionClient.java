@@ -3,7 +3,7 @@ package test.producers;
 import mlesiewski.simpledi.annotations.Inject;
 import test.util.TestScope;
 
-public class InjectionClient {
+public class UnnamedBeanInjectionClient {
 
     @Inject
     UnnamedBean unnamedBean;
