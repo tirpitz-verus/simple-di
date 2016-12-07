@@ -5,7 +5,7 @@ import mlesiewski.simpledi.scopes.Scope;
 import java.lang.annotation.*;
 
 /** Marks a field or a constructor argument as an injection point. */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.CONSTRUCTOR})
 @Documented
 public @interface Inject {
