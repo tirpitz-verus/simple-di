@@ -66,6 +66,7 @@ public class CustomScopeAnnotationProcessor {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private List<? extends TypeMirror> getInterfaces(TypeElement typeElement) {
         List<? extends TypeMirror> interfaces = typeElement.getInterfaces();
         ArrayList<? extends TypeMirror> result = new ArrayList<>(interfaces);

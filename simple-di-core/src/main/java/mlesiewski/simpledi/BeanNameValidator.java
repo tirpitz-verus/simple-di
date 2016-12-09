@@ -4,11 +4,11 @@ import java.util.regex.Pattern;
 
 /**
  * Validates {@link mlesiewski.simpledi.annotations.Bean} names.
- * A valid name contains only letters, numbers, dashes and underscores.
+ * A valid name contains only letters, numbers and underscores.
  */
 public class BeanNameValidator {
 
-    private final Pattern PATTERN = Pattern.compile("^[-\\w\\d_]+$");
+    private final Pattern PATTERN = Pattern.compile("^[\\w\\d_]+$");
 
     /**
      * Validates names. A valid name contains only letters, numbers, dashes and underscores.

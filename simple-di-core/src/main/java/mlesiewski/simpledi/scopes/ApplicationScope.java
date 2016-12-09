@@ -87,15 +87,14 @@ public class ApplicationScope extends DefaultScopeImpl {
 
     /** Gets {@link Bean} from the eager bean cache. */
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T getBean(String name) {
         LOGGER.trace("getBean({})", name);
         if (!eagerBeanCache.containsKey(name)) {
             throw new SimpleDiException("Scope '" + getName() + "' does not have a BeanProvider instance registered under the name '" + name + "'");
         }
         try {
-            @SuppressWarnings("unchecked")
-            T bean = (T) eagerBeanCache.get(name);
-            return bean;
+            return (T) eagerBeanCache.get(name);
         } catch (ClassCastException ccs) {
             throw new SimpleDiException("In Scope '" + getName() + "' bean '" + name + "' has a different type to requested", ccs);
         }
