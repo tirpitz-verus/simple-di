@@ -41,79 +41,33 @@ public class GeneratedCodeWriter {
         try {
             FileObject resource = filer.createResource(StandardLocation.SOURCE_OUTPUT, pkg, relativeName);
             Writer writer = resource.openWriter();
-            Template template;
-            Map<String, String> params = new HashMap<>();
-            if (generated instanceof ProducedBeanProviderEntity) {
-                ProducedBeanProviderEntity entity = (ProducedBeanProviderEntity) generated;
-                template = TemplateFactory.get("ProducedBeanProviderImplementation");
-                params.put("beanProviderPackage", entity.packageName());
-                params.put("beanProviderSimpleName", entity.simpleName());
-                BeanEntity beanEntity = entity.beanEntity();
-                params.put("beanType", beanEntity.typeName());
-                params.put("beanName", beanEntity.name());
-                params.put("beanScope", beanEntity.scope());
-                params.put("beanProducerBeanName", entity.beanProducer().typeName());
-                params.put("beanProducerBeanScope", entity.beanProducer().scope());
-                params.put("beanProducerMethod", entity.producerMethod());
-
-                String tryBlock = "";
-                String catchBlock = "";
-                if (!entity.thrown().isEmpty()) {
-                    tryBlock = "try {";
-                    catchBlock = String.format("} catch (%s e) { throw new SimpleDiException(\"exception wrapped during calling produce() :\" + e.getMessage(), e); }", entity.thrown());
-                }
-                params.put("tryBlock", tryBlock);
-                params.put("catchBlock", catchBlock);
-            } else if (generated instanceof BeanProviderEntity) {
-                BeanProviderEntity entity = (BeanProviderEntity) generated;
-                template = TemplateFactory.get("BeanProviderImplementation");
-                params.put("beanProviderPackage", entity.packageName());
-                params.put("beanProviderSimpleName", entity.simpleName());
-                BeanEntity beanEntity = entity.beanEntity();
-                params.put("beanType", beanEntity.typeName());
-                params.put("beanName", beanEntity.name());
-                params.put("beanScope", beanEntity.scope());
-
-                String constructorArguments = beanEntity.constructor().list().stream()
-                        .map(beanName -> {
-                            if (beanName.scopeIsDefault()) {
-                                return String.format("BeanRegistry.getBean(\"%s\")", beanName.name());
-                            } else {
-                                return String.format("BeanRegistry.getBean(\"%s\", \"%s\")", beanName.name(), beanName.scope());
-                            }
-                        })
-                        .collect(Collectors.joining(", "));
-                params.put("constructorArguments", constructorArguments);
-
-                @SuppressWarnings("unchecked")
-                StringBuilder softDependencies = new StringBuilder();
-                beanEntity.fields().forEach((field, dependency) -> {
-                    softDependencies.append("bean.").append(field).append(" = ");
-                    softDependencies.append("BeanRegistry.getBean(\"").append(dependency.name()).append("\"");
-                    if (!dependency.scopeIsDefault()) {
-                        softDependencies.append(", \"").append(dependency.scope()).append("\"");
-                    }
-                    softDependencies.append(")");
-                    softDependencies.append(";\n\t\t");
-                });
-                beanEntity.setters().forEach((setter, dependency) -> {
-                    softDependencies.append("bean.").append(setter).append("(");
-                    softDependencies.append("BeanRegistry.getBean(\"").append(dependency.name()).append("\"");
-                    if (!dependency.scopeIsDefault()) {
-                        softDependencies.append(", \"").append(dependency.scope()).append("\"");
-                    }
-                    softDependencies.append(")");
-                    softDependencies.append(");\n\t\t");
-                });
-                params.put("softDependencies", softDependencies.length() != 0 ? softDependencies.toString() : "//empty");
-            } else {
-                throw new SimpleDiAptException("could not find template for " + generated.getClass().getName());
-            }
+            Template template = getTemplateFor(generated);
+            Map<String, String> params = getTemplateParametersFor(generated);
             String text = template.compile(params);
             writer.write(text);
             writer.close();
         } catch (IOException e) {
             throw new SimpleDiAptException("could not write a class '" + typeName + "' file because: " + e.getMessage());
+        }
+    }
+
+    private Map<String, String> getTemplateParametersFor(GeneratedCode generated) {
+        if (generated instanceof ProducedBeanProviderEntity) {
+            return new ProducedBeanProviderEntityTemplateParameters(generated);
+        } else if (generated instanceof BeanProviderEntity) {
+            return new BeanProviderEntityTemplateParameters(generated);
+        } else {
+            throw new SimpleDiAptException("could not find template for " + generated.getClass().getName());
+        }
+    }
+
+    private Template getTemplateFor(GeneratedCode generated) {
+        if (generated instanceof ProducedBeanProviderEntity) {
+            return TemplateFactory.get("ProducedBeanProviderImplementation");
+        } else if (generated instanceof BeanProviderEntity) {
+            return TemplateFactory.get("BeanProviderImplementation");
+        } else {
+            throw new SimpleDiAptException("could not find template for " + generated.getClass().getName());
         }
     }
 
