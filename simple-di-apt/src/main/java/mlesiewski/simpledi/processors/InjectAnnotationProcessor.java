@@ -92,6 +92,7 @@ public class InjectAnnotationProcessor {
     /** Processes class fields. */
     private void processField(Element field) {
         Validators.isNotAPrimitive(field, Inject.class);
+        Validators.isNotStatic(field, Inject.class, "fields");
         BeanEntity beanEntity = getEnclosingBeanEntity(field);
 
         Inject annotation = field.getAnnotation(Inject.class);
