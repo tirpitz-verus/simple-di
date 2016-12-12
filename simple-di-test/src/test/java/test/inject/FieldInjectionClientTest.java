@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.nullValue;
 
 import org.testng.annotations.Test;
 
@@ -25,5 +26,13 @@ public class FieldInjectionClientTest {
         assertThat(scopedByNameActual, is(BeanInjectedByName.CALL_UUID));
         assertThat(defaultScopeByTypeActual, is(BeanInjectedByType.CALL_UUID));
         assertThat(scopedByTypeActual, is(BeanInjectedByType.CALL_UUID));
+    }
+
+    @Test
+    public void doesNotInjectValuesIntoStaticFields() throws Exception {
+        // when
+        FieldInjectionClient injectionClient = BeanRegistry.getBean(FieldInjectionClient.class);
+        // then
+        assertThat(injectionClient.staticDefaultScopeByType, is(nullValue()));
     }
 }
