@@ -103,12 +103,8 @@ public class InjectAnnotationProcessor {
         boolean inaccessible = modifiers.contains(PRIVATE) || modifiers.contains(PROTECTED);
         if (inaccessible) {
             Optional<ExecutableElement> setter = getSetterMethodFor(field, fieldName);
-            if (setter.isPresent()) {
-                ExecutableElement method = setter.get();
-                beanEntity.setter(method.getSimpleName().toString(), beanName);
-            } else {
-                throw new SimpleDiAptException("private or protected field with no setter cannot be annotated with " + Inject.class.getSimpleName(), field);
-            }
+            ExecutableElement method = setter.orElseThrow(() -> new SimpleDiAptException("private or protected field with no setter cannot be annotated with " + Inject.class.getSimpleName(), field));
+            beanEntity.setter(method.getSimpleName().toString(), beanName);
         } else {
             beanEntity.field(fieldName, beanName);
         }

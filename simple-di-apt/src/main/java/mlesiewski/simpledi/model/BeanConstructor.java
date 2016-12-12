@@ -64,8 +64,12 @@ public class BeanConstructor {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof BeanConstructor)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof BeanConstructor)) {
+            return false;
+        }
         BeanConstructor that = (BeanConstructor) o;
         return throwsExceptions == that.throwsExceptions && Objects.equals(parameters, that.parameters);
     }
@@ -93,21 +97,18 @@ public class BeanConstructor {
             } else {
                 Inject annotation = parameter.getAnnotation(Inject.class);
                 DeclaredType paramType = (DeclaredType) parameter.asType();
-                BeanName paramBeanName;
-                if (annotation != null) {
-                    paramBeanName = new BeanName(annotation, paramType);
-                } else {
-                    paramBeanName = new BeanName(paramType);
-                }
-                if (!paramBeanName.equals(beanName)) {
-                    result.isTrue();
-                } else if (!paramBeanName.nameFromType().equals(beanName.nameFromType())) {
+                BeanName paramBeanName = getBeanName(annotation, paramType);
+                if (!paramBeanName.equals(beanName) || !paramBeanName.nameFromType().equals(beanName.nameFromType())) {
                     result.isTrue();
                 }
             }
             i.param++;
         });
         return result.value;
+    }
+
+    private BeanName getBeanName(Inject annotation, DeclaredType paramType) {
+        return annotation != null ? new BeanName(annotation, paramType) : new BeanName(paramType);
     }
 
     private class CounterWrapper {
