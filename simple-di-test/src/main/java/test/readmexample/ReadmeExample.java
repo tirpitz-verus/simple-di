@@ -1,9 +1,9 @@
 package test.readmexample;
 
-import mlesiewski.simpledi.BeanRegistry;
-import mlesiewski.simpledi.annotations.Inject;
-import mlesiewski.simpledi.annotations.Produce;
-import mlesiewski.simpledi.scopes.NewInstanceScope;
+import mlesiewski.simpledi.core.BeanRegistry;
+import mlesiewski.simpledi.core.annotations.Inject;
+import mlesiewski.simpledi.core.annotations.Produce;
+import mlesiewski.simpledi.core.scopes.NewInstanceScope;
 
 class A {}
 

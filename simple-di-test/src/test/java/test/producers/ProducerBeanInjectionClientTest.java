@@ -1,6 +1,6 @@
 package test.producers;
 
-import mlesiewski.simpledi.BeanRegistry;
+import mlesiewski.simpledi.core.BeanRegistry;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.CoreMatchers.is;

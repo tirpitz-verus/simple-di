@@ -1,7 +1,7 @@
 package test.producers;
 
-import mlesiewski.simpledi.BeanRegistry;
-import mlesiewski.simpledi.SimpleDiException;
+import mlesiewski.simpledi.core.BeanRegistry;
+import mlesiewski.simpledi.core.SimpleDiException;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

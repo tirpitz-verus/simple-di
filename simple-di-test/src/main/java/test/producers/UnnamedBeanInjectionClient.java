@@ -1,6 +1,6 @@
 package test.producers;
 
-import mlesiewski.simpledi.annotations.Inject;
+import mlesiewski.simpledi.core.annotations.Inject;
 import test.util.TestScope;
 
 public class UnnamedBeanInjectionClient {

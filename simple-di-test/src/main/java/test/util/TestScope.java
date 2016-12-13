@@ -1,7 +1,7 @@
 package test.util;
 
-import mlesiewski.simpledi.annotations.CustomScope;
-import mlesiewski.simpledi.scopes.BaseScopeImpl;
+import mlesiewski.simpledi.core.annotations.CustomScope;
+import mlesiewski.simpledi.core.scopes.BaseScopeImpl;
 import org.slf4j.LoggerFactory;
 
 /**

@@ -1,6 +1,6 @@
 package test.inject;
 
-import mlesiewski.simpledi.BeanRegistry;
+import mlesiewski.simpledi.core.BeanRegistry;
 
 import java.util.UUID;
 

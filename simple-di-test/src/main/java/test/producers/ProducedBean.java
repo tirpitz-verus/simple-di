@@ -1,6 +1,6 @@
 package test.producers;
 
-import mlesiewski.simpledi.annotations.Bean;
+import mlesiewski.simpledi.core.annotations.Bean;
 import test.util.TestScope;
 
 @Bean(name = ProducedBean.PRODUCED_NAME, scope = TestScope.NAME)

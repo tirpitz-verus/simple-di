@@ -1,11 +1,11 @@
 package {{beanProviderPackage}};
 
 import javax.annotation.Generated;
-import mlesiewski.simpledi.annotations.Registerable;
-import mlesiewski.simpledi.BeanProvider;
-import mlesiewski.simpledi.BeanRegistry;
+import mlesiewski.simpledi.core.annotations.Registerable;
+import mlesiewski.simpledi.core.BeanProvider;
+import mlesiewski.simpledi.core.BeanRegistry;
 
-@Generated("mlesiewski.simpledi.SimpleDiProcessor")
+@Generated("mlesiewski.simpledi.apt.SimpleDiProcessor")
 public class {{beanProviderSimpleName}} implements BeanProvider<{{beanType}}>, Registerable {
 
     public void register() {

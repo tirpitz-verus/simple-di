@@ -1,6 +1,6 @@
 package test.annotatedbeans;
 
-import mlesiewski.simpledi.annotations.Bean;
+import mlesiewski.simpledi.core.annotations.Bean;
 import test.util.TestScope;
 
 import java.util.UUID;

@@ -1,7 +1,7 @@
 package test.producers;
 
-import mlesiewski.simpledi.annotations.Produce;
-import mlesiewski.simpledi.scopes.NewInstanceScope;
+import mlesiewski.simpledi.core.annotations.Produce;
+import mlesiewski.simpledi.core.scopes.NewInstanceScope;
 import test.util.TestScope;
 
 public class UnnamedBeanProducer {

@@ -1,6 +1,6 @@
 package test.annotatedbeans;
 
-import mlesiewski.simpledi.BeanRegistry;
+import mlesiewski.simpledi.core.BeanRegistry;
 import org.testng.annotations.Test;
 
 import java.util.UUID;
