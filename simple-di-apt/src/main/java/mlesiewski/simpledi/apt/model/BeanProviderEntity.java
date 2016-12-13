@@ -1,5 +1,6 @@
 package mlesiewski.simpledi.apt.model;
 
+import javax.lang.model.element.TypeElement;
 import java.util.Set;
 
 /**
@@ -8,22 +9,25 @@ import java.util.Set;
 public class BeanProviderEntity extends ClassEntity implements GeneratedCode {
 
     private final BeanEntity beanEntity;
+    private final TypeElement source;
 
     /**
      * @param beanEntity a bean that is going to be provided by this entity
      * @param simpleNamePostfix postfix appended to the represented class simple name
      */
-    protected BeanProviderEntity(BeanEntity beanEntity, String simpleNamePostfix) {
+    protected BeanProviderEntity(BeanEntity beanEntity, String simpleNamePostfix, TypeElement source) {
         super(beanEntity.packageName(), simpleNameOf(beanEntity, simpleNamePostfix));
         this.beanEntity = beanEntity;
+        this.source = source;
     }
 
     /**
      * @param beanEntity a bean that is going to be provided by this entity
      */
-    public BeanProviderEntity(BeanEntity beanEntity) {
+    public BeanProviderEntity(BeanEntity beanEntity, TypeElement source) {
         super(beanEntity.packageName(), simpleNameOf(beanEntity, "Provider"));
         this.beanEntity = beanEntity;
+        this.source = source;
     }
 
     /**
@@ -38,6 +42,18 @@ public class BeanProviderEntity extends ClassEntity implements GeneratedCode {
      */
     public BeanName beanName() {
         return beanEntity().beanName();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean hasSource() {
+        return source != null;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public TypeElement getSource() {
+        return source;
     }
 
     /** @return set of hard (constructor injected) dependencies */

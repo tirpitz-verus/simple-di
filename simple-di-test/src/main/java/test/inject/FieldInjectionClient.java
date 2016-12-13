@@ -3,7 +3,7 @@ package test.inject;
 import mlesiewski.simpledi.core.annotations.Inject;
 import test.util.TestScope;
 
-public class FieldInjectionClient {
+public class FieldInjectionClient extends AbstractFieldInjectionClient {
 
     @Inject(name = "bean_injected_by_name")
     BeanInjectedByName defaultScopeByName;
@@ -16,4 +16,10 @@ public class FieldInjectionClient {
 
     @Inject(scope = TestScope.NAME)
     BeanInjectedByType scopedByType;
+}
+
+abstract class AbstractFieldInjectionClient {
+
+    @Inject
+    BeanInjectedByType defaultScopeByTypeInSuperclass;
 }

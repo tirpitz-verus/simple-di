@@ -11,10 +11,14 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
+import static javax.lang.model.element.Modifier.ABSTRACT;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PROTECTED;
 
@@ -30,12 +34,55 @@ public class InjectAnnotationProcessor {
         this.collector = collector;
     }
 
-    /** @param roundEnv elements to process */
+    /** @param roundEnv elements to processSupertypes */
     public void process(RoundEnvironment roundEnv) {
         roundEnv.getElementsAnnotatedWith(Inject.class).forEach(this::processElement);
     }
 
-    /** Top level process method with common validation. Delegates to other methods. */
+    /** @param generatedCodes all the generated elements */
+    public void processSupertypes(Collection<GeneratedCode> generatedCodes) {
+        generatedCodes.stream()
+                .filter(GeneratedCode::hasSource)
+                .forEach(this::addFieldDependencies);
+    }
+
+    private void addFieldDependencies(GeneratedCode generated) {
+        BeanName beanName = generated.beanName();
+        BeanEntity bean = collector.getBean(beanName);
+        supertypesOf(generated.getSource()).forEach(source -> addFiledDependenciesToA(bean, source));
+    }
+
+    private void addFiledDependenciesToA(BeanEntity bean, TypeElement source) {
+        source.getEnclosedElements().stream()
+                .filter(this::hasAtInjectAnnotation)
+                .filter(this::isAField)
+                .forEach(field -> addFieldDependencyToABean(field, bean));
+    }
+
+    private Collection<TypeElement> supertypesOf(TypeElement childClass) {
+        return supertypesOf(childClass, new ArrayList<>());
+    }
+
+    private Collection<TypeElement> supertypesOf(TypeElement childClass, Collection<TypeElement> accumulator) {
+        DeclaredType superclass = (DeclaredType) childClass.getSuperclass();
+        TypeElement superElement = (TypeElement) superclass.asElement();
+        boolean notTheObject = !superElement.getQualifiedName().contentEquals(Object.class.getName());
+        if (notTheObject) {
+            accumulator.add(superElement);
+            supertypesOf(superElement, accumulator);
+        }
+        return accumulator;
+    }
+
+    private boolean isAField(Element element) {
+        return element.getKind().isField();
+    }
+
+    private boolean hasAtInjectAnnotation(Element element) {
+        return element.getAnnotation(Inject.class) != null;
+    }
+
+    /** Top level processSupertypes method with common validation. Delegates to other methods. */
     private void processElement(Element element) {
         Logger.note("processing element '" + element.getSimpleName() + "'");
         Inject annotation = element.getAnnotation(Inject.class);
@@ -86,15 +133,24 @@ public class InjectAnnotationProcessor {
         String paramName = parameter.getSimpleName().toString();
         beanConstructor.set(paramName, paramBeanName);
 
-        registerInjected(paramBeanName, injectedType);
+        registerInjected(paramBeanName, injectedType, (TypeElement) constructor.getEnclosingElement());
     }
 
-    /** Processes class fields. */
+    /** Processes class fields. Ignores fields in an abstract class. */
     private void processField(Element field) {
         Validators.isNotAPrimitive(field, Inject.class);
         Validators.isNotStatic(field, Inject.class, "fields");
+
+        if (inAbstractClass(field)) {
+            return;
+        }
+
         BeanEntity beanEntity = getEnclosingBeanEntity(field);
 
+        addFieldDependencyToABean(field, beanEntity);
+    }
+
+    private void addFieldDependencyToABean(Element field, BeanEntity beanEntity) {
         Inject annotation = field.getAnnotation(Inject.class);
         DeclaredType declaredType = (DeclaredType) field.asType();
         BeanName beanName = new BeanName(annotation, declaredType);
@@ -111,15 +167,21 @@ public class InjectAnnotationProcessor {
         }
     }
 
+    /** @return true if the enclosing class is abstract */
+    private boolean inAbstractClass(Element field) {
+        Element aBeanClass = field.getEnclosingElement();
+        return aBeanClass.getModifiers().contains(ABSTRACT);
+    }
+
     // helpers
 
     /** if not already registered than registers a new bean provider for the type of the element*/
-    private void registerInjected(BeanName beanName, DeclaredType injectedType) {
+    private void registerInjected(BeanName beanName, DeclaredType injectedType, TypeElement source) {
         if (!collector.hasBean(beanName)) {
             Validators.validBeanConstructor(injectedType);
             ClassEntity injectedClassEntity = ClassEntity.from(injectedType);
             BeanEntity injectedEntity = BeanEntity.builder().from(injectedClassEntity).withName(beanName.nameFromAnnotation()).withScope(beanName.scopeFromAnnotation()).build();
-            BeanProviderEntity provider = new BeanProviderEntity(injectedEntity);
+            BeanProviderEntity provider = new BeanProviderEntity(injectedEntity, source);
             collector.registrable(provider);
         }
     }
@@ -156,7 +218,7 @@ public class InjectAnnotationProcessor {
                 paramBeanName = new BeanName(paramType);
             }
             beanConstructor.add(paramName, paramBeanName);
-            registerInjected(paramBeanName, paramType);
+            registerInjected(paramBeanName, paramType, (TypeElement) constructor.getEnclosingElement());
         });
         boolean throwsExceptions = constructor.getThrownTypes().isEmpty();
         beanConstructor.throwsExceptions(throwsExceptions);
@@ -165,7 +227,7 @@ public class InjectAnnotationProcessor {
 
     /** @return {@link BeanEntity} with a correct name */
     private BeanEntity getEnclosingBeanEntity(Element element) {
-        Element aBeanClass = element.getEnclosingElement();
+        TypeElement aBeanClass = (TypeElement) element.getEnclosingElement();
         DeclaredType declaredType = (DeclaredType) aBeanClass.asType();
         Validators.validBeanConstructor(declaredType);
         Bean annotation = aBeanClass.getAnnotation(Bean.class);
@@ -179,13 +241,13 @@ public class InjectAnnotationProcessor {
     }
 
     /** @return {@link BeanEntity} form the {@link #collector} - if its not there than a new {@link BeanEntity} will be created and pun into {@link #collector} */
-    private BeanEntity getBeanEntity(Element beanClass, BeanName beanClassName) {
+    private BeanEntity getBeanEntity(TypeElement beanClass, BeanName beanClassName) {
         if (collector.hasBean(beanClassName)) {
             return collector.getBean(beanClassName);
         } else {
             ClassEntity beanClassEntity = ClassEntity.from(beanClass.asType());
             BeanEntity beanEntity = BeanEntity.builder().from(beanClassEntity).withName(beanClassName.nameFromAnnotation()).withScope(beanClassName.scopeFromAnnotation()).build();
-            BeanProviderEntity provider = new BeanProviderEntity(beanEntity);
+            BeanProviderEntity provider = new BeanProviderEntity(beanEntity, beanClass);
             collector.registrable(provider);
             return beanEntity;
         }

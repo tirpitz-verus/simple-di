@@ -111,7 +111,7 @@ Currently there are only three **Scope** implementations:
 * **NewInstanceScope** - Always gives you a new instance of a bean and does not retain it.
 
 SingletonScope will be used if no scope is provided.
-BeanRegistry.defaultScope() will return its name.
+`BeanRegistry.defaultScope()` will return its name.
 
 #### 1.2.5 custom scopes
 
@@ -193,6 +193,7 @@ Stuff I want to have before 1.0.0:
 * process annotations of the base classes (aka be polymorphism aware)
 
 Dreams for the future:
+* injecting implementations into supertypes (eg. interfaces)
 * don't wrap bean producers in providers if they have only one produce method
 * bundle providers from the same package into one class
 * bundle providers of public bean classes into one class

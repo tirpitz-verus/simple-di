@@ -4,6 +4,8 @@ import mlesiewski.simpledi.apt.SimpleDiAptException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.lang.model.element.TypeElement;
+
 import static mlesiewski.simpledi.apt.model.GeneratedOrderMatcher.returnsRegistrableInOrder;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -87,7 +89,8 @@ public class GeneratedCodeCollectorTest {
     private BeanEntity createBeanEntity(String name) {
         ClassEntity classEntity = new ClassEntity("", name);
         BeanEntity beanEntity = BeanEntity.builder().from(classEntity).withName(name).build();
-        BeanProviderEntity providerEntity = new BeanProviderEntity(beanEntity);
+        TypeElement source = null;
+        BeanProviderEntity providerEntity = new BeanProviderEntity(beanEntity, source);
         collector.registrable(providerEntity);
         return beanEntity;
     }

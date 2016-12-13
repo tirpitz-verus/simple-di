@@ -9,6 +9,7 @@ import mlesiewski.simpledi.apt.model.GeneratedCodeCollector;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 
 /**
@@ -23,7 +24,7 @@ public class BeanAnnotationProcessor {
     }
 
     /**
-     * @param roundEnv elements to process
+     * @param roundEnv elements to processSupertypes
      */
     public void process(RoundEnvironment roundEnv) {
         roundEnv.getElementsAnnotatedWith(Bean.class).forEach(this::processElement);
@@ -36,7 +37,7 @@ public class BeanAnnotationProcessor {
         Bean annotation = element.getAnnotation(Bean.class);
         ClassEntity beanClass = ClassEntity.from(element.asType());
         BeanEntity bean = BeanEntity.builder().from(beanClass).withScope(annotation.scope()).withName(annotation.name()).build();
-        BeanProviderEntity provider = new BeanProviderEntity(bean);
+        BeanProviderEntity provider = new BeanProviderEntity(bean, (TypeElement) element);
         collector.registrable(provider);
     }
 

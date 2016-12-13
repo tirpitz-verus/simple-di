@@ -13,6 +13,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
@@ -44,7 +45,7 @@ public class ProduceAnnotationsProcessor {
     }
 
     /**
-     * @param element element to process - create new bean providers for the bean producer and the bean being produced
+     * @param element element to processSupertypes - create new bean providers for the bean producer and the bean being produced
      */
     private void processElement(Element element) {
         Logger.note("processing element '" + element.getSimpleName() + "'");
@@ -70,10 +71,11 @@ public class ProduceAnnotationsProcessor {
      * @return bean provider that provides a bean producer - the one with {@link Produce} annotated method
      */
     private BeanProviderEntity createBeanProducerProvider(ExecutableElement method) {
-        TypeMirror beanProducerType = method.getEnclosingElement().asType();
+        TypeElement enclosingElement = (TypeElement) method.getEnclosingElement();
+        TypeMirror beanProducerType = enclosingElement.asType();
         ClassEntity beanProducerClass = ClassEntity.from(beanProducerType);
         BeanEntity beanProducer = BeanEntity.builder().from(beanProducerClass).build();
-        BeanProviderEntity beanProvider = new BeanProviderEntity(beanProducer);
+        BeanProviderEntity beanProvider = new BeanProviderEntity(beanProducer, enclosingElement);
         generatedCollector.registrable(beanProvider);
         return beanProvider;
     }

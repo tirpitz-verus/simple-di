@@ -1,5 +1,6 @@
 package mlesiewski.simpledi.apt.model;
 
+import javax.lang.model.element.TypeElement;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,6 +9,7 @@ import java.util.stream.Collectors;
  */
 public class ProducedBeanProviderEntity extends BeanProviderEntity implements GeneratedCode {
 
+    private static final TypeElement SOURCE = null;
     private final BeanEntity beanProducer;
     private final String producerMethod;
     private final String thrown;
@@ -19,7 +21,7 @@ public class ProducedBeanProviderEntity extends BeanProviderEntity implements Ge
      * @param thrown list of names of thrown types declared by the producer method
      */
     public ProducedBeanProviderEntity(BeanEntity producedBean, BeanEntity beanProducer, String producerMethod, List<String> thrown) {
-        super(producedBean, "Wrapper");
+        super(producedBean, "Wrapper", SOURCE);
         this.beanProducer = beanProducer;
         this.producerMethod = producerMethod;
         this.thrown = thrown.stream().collect(Collectors.joining(" | "));

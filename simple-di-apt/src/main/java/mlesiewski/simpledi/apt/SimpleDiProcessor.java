@@ -46,21 +46,23 @@ public class SimpleDiProcessor extends AbstractProcessor {
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         Logger.note("processing mlesiewski.simpledi.core.annotations");
         try {
-            // 1. process @Produce annotations - create @Produce Providers
+            // 1. processSupertypes @Produce annotations - create @Produce Providers
             produceAnnotationsProcessor.process(roundEnv);
-            // 2. process @Bean annotations - creating Providers for them (if no producers)
+            // 2. processSupertypes @Bean annotations - creating Providers for them (if no producers)
             beanAnnotationProcessor.process(roundEnv);
-            // 3. process @Inject annotations - creating Providers for them and their targets if none were created already
+            // 3. processSupertypes @Inject annotations - creating Providers for them and their targets if none were created already
             injectAnnotationProcessor.process(roundEnv);
-            // 4. process @CustomScope annotations - just garter types
+            // 4. processSupertypes @CustomScope annotations - just garter types
             customScopeAnnotationProcessor.process(roundEnv);
             if (roundEnv.processingOver()) {
                 Collection<GeneratedCode> registrable = collector.registrable();
-                // 4. write source files
+                // 5. processSupertypes all beans in search for @Inject annotations in supertypes
+                injectAnnotationProcessor.processSupertypes(registrable);
+                // 6. write source files
                 codeWriter.writeSourceFiles(registrable);
-                // 5. write Registrable service loader file
+                // 7. write Registrable service loader file
                 codeWriter.writeRegistrableServiceLoader(registrable);
-                // 6. write Scope service loader file
+                // 8. write Scope service loader file
                 codeWriter.writeScopeServiceLoader(customScopeAnnotationProcessor.scopes());
             }
         } catch (SimpleDiAptException e) {
