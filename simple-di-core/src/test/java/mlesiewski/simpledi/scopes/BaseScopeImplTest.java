@@ -13,12 +13,12 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.testng.Assert.assertFalse;
 
-public class DefaultScopeImplTest {
+public class BaseScopeImplTest {
 
     private static final Object BEAN = new Object();
     private static final TestBeanProvider<Object> TEST_BEAN_PROVIDER = new TestBeanProvider<>(() -> BEAN);
 
-    private DefaultScopeImpl scope;
+    private BaseScopeImpl scope;
     private int timesBeanWasProvided = 0;
 
     @Test
@@ -116,7 +116,7 @@ public class DefaultScopeImplTest {
 
     @BeforeMethod
     public void setUp() throws Exception {
-        scope = new DefaultScopeImpl("default", LoggerFactory.getLogger("DefaultScopeImplTestLogger"));
+        scope = new BaseScopeImpl("default", LoggerFactory.getLogger("DefaultScopeImplTestLogger"));
         timesBeanWasProvided = 0;
     }
 }

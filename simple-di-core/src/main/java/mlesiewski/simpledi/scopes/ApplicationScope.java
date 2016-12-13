@@ -13,7 +13,7 @@ import java.util.LinkedHashMap;
  * Global application scope - beans will be created eagerly after this scope was started.
  * Beans based on this scope should not have hard (constructor) dependencies on beans from other scopes.
  */
-public class ApplicationScope extends DefaultScopeImpl {
+public class ApplicationScope extends BaseScopeImpl {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationScope.class);
 

@@ -110,6 +110,9 @@ Currently there are only three **Scope** implementations:
 * **SingletonScope** - Instantiates singleton beans lazily and throws them away if they are not needed.
 * **NewInstanceScope** - Always gives you a new instance of a bean and does not retain it.
 
+SingletonScope will be used if no scope is provided.
+BeanRegistry.defaultScope() will return its name.
+
 #### 1.2.5 custom scopes
 
 It is possible to implement a custom **Scope** implementation and use it in the same way as other scopes are being used.
@@ -186,8 +189,6 @@ Nonetheless I am sure that we'll figure this stuff out!
 ## 6. Plans for the future
 
 Stuff I want to have before 1.0.0:
-* SingletonScope as the default scope
-* refactor the GeneratedCodeWriter
 * make this library concurrency friendly
 * process annotations of the base classes (aka be polymorphism aware)
 

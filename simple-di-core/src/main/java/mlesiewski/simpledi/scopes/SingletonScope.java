@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Global singleton scope - beans will be created lazily after this scope was started.
  */
-public class SingletonScope extends DefaultScopeImpl {
+public class SingletonScope extends BaseScopeImpl {
 
     /** Ties a {@link Bean} to the application scope. */
     public static final String NAME = "mlesiewski.simpledi.Scope.SING_SCOPE";

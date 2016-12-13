@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Optional;
 
-/** A delegate for {@link BeanRegistry}. Default scope is {@link ApplicationScope}. */
+/** A delegate for {@link BeanRegistry}. Default scope is {@link SingletonScope}. */
 class BeanRegistryImpl {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BeanRegistryImpl.class);
@@ -24,15 +24,17 @@ class BeanRegistryImpl {
      */
     BeanRegistryImpl() {
         LOGGER.debug("instantiating BeanRegistryImpl");
-        // appScope
-        Scope appScope = new ApplicationScope();
-        register(appScope);
-        // default scope
-        DEFAULT_SCOPE = appScope.getName();
+        // application scope
+        Scope applicationScope = new ApplicationScope();
+        register(applicationScope);
         // singleton scope
-        register(new SingletonScope());
+        Scope singletonScope = new SingletonScope();
+        register(singletonScope);
         // new instance scope
-        register(new NewInstanceScope());
+        Scope newInstanceScope = new NewInstanceScope();
+        register(newInstanceScope);
+        // default scope
+        DEFAULT_SCOPE = singletonScope.getName();
     }
 
     /**

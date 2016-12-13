@@ -1,6 +1,7 @@
 package mlesiewski.simpledi.model;
 
 import mlesiewski.simpledi.SimpleDiAptException;
+import mlesiewski.simpledi.scopes.ApplicationScope;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -65,7 +66,7 @@ public class GeneratedCodeCollectorTest {
         father.hardDependency(fathersMother.beanName());
         son.hardDependency(mother.beanName());
         // then
-        assertThat(collector, returnsRegistrableInOrder(fathersFather, fathersMother, mother, father, son));
+        assertThat(collector, returnsRegistrableInOrder(mother, fathersMother, fathersFather, father, son));
     }
 
     @Test(expectedExceptions = SimpleDiAptException.class, expectedExceptionsMessageRegExp = ".*cycle.*")
@@ -86,10 +87,10 @@ public class GeneratedCodeCollectorTest {
     }
 
     private BeanEntity createBeanEntity(String name) {
-        ClassEntity class1 = new ClassEntity("", name);
-        BeanEntity entity1 = BeanEntity.builder().from(class1).withName(name).build();
-        BeanProviderEntity provider1 = new BeanProviderEntity(entity1);
-        collector.registrable(provider1);
-        return entity1;
+        ClassEntity classEntity = new ClassEntity("", name);
+        BeanEntity beanEntity = BeanEntity.builder().from(classEntity).withName(name).build();
+        BeanProviderEntity providerEntity = new BeanProviderEntity(beanEntity);
+        collector.registrable(providerEntity);
+        return beanEntity;
     }
 }

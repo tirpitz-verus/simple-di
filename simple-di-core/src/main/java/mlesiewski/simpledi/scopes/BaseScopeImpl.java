@@ -8,11 +8,11 @@ import java.util.HashMap;
 import java.util.WeakHashMap;
 
 /**
- * Default {@link Scope} implementation. When a {@link #getBean(String)} is called a {@link WeakHashMap} is checked
+ * Base {@link Scope} implementation. When a {@link #getBean(String)} is called a {@link WeakHashMap} is checked
  * first to see if it contains a {@link mlesiewski.simpledi.annotations.Bean} under the name provided. If the value is
  * {@code null} then a registered {@link BeanProvider} is asked for a new instance.
  */
-public class DefaultScopeImpl implements Scope {
+public class BaseScopeImpl implements Scope {
 
     private final Logger logger;
     protected final String name;
@@ -20,12 +20,7 @@ public class DefaultScopeImpl implements Scope {
     protected final WeakHashMap<String, Object> beanCache = new WeakHashMap<>();
     protected boolean started = false;
 
-//    /** @throws SimpleDiException always as we rely on name and logger being provided during instantiation */
-//    private DefaultScopeImpl() {
-//        throw new SimpleDiException("someone tried to call new DefaultScopeImpl()");
-//    }
-
-    protected DefaultScopeImpl(String name, Logger logger) {
+    protected BaseScopeImpl(String name, Logger logger) {
         this.logger = logger;
         this.name = name;
         logger.debug("instantiating scope with name '{}'", name);
