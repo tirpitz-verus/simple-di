@@ -43,7 +43,10 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <compilerArgument>-proc:none</compilerArgument>
+                    <compilerArguments>
+                        <proc:none/>
+                        <Werror/>
+                    </compilerArguments>
                 </configuration>
             </plugin>
 
