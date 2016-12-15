@@ -51,7 +51,7 @@ public class NewInstanceScopeTest {
 
         // then
         assertThat(bean1, not(nullValue()));
-        assertThat(provider.counter.get(), is(true));
+        assertThat(provider.provideCalled, is(true));
         assertThat(provider.softDependenciesSet, is(true));
 
         // given
