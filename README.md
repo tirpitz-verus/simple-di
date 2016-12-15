@@ -1,4 +1,4 @@
-# simple-di [![Build Status](https://travis-ci.org/tirpitz-verus/simple-di.svg?branch=master)](https://travis-ci.org/tirpitz-verus/simple-di) [![codebeat badge](https://codebeat.co/badges/a6bdd2ee-3a13-4469-847b-286fa71cc52f)](https://codebeat.co/projects/github-com-tirpitz-verus-simple-di)
+# simple-di [![Build Status](https://travis-ci.org/tirpitz-verus/simple-di.svg?branch=master)](https://travis-ci.org/tirpitz-verus/simple-di) [![codebeat badge](https://codebeat.co/badges/a6bdd2ee-3a13-4469-847b-286fa71cc52f)](https://codebeat.co/projects/github-com-tirpitz-verus-simple-di) [![Libraries.io for GitHub](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/tirpitz-verus/simple-di/blob/master/LICENSE)
 a very simple dependency injection framework for Java 8
 
 current version `1.0-SNAPSHOT`
