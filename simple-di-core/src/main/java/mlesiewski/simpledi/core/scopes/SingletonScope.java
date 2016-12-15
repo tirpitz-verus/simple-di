@@ -30,4 +30,12 @@ public class SingletonScope extends BaseScopeImpl {
     public void end() {
         throw new SimpleDiException(NAME + " cannot be ended");
     }
+
+    /** {@inheritDoc} */
+    @Override
+    protected <T> T getBeanFromBeans(String name) {
+        synchronized (this) {
+            return super.getBeanFromBeans(name);
+        }
+    }
 }

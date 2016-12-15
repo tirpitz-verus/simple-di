@@ -162,6 +162,6 @@ class BeanRegistryImpl {
     /** starts eager scopes so that they can be instantiated with their hard dependencies */
     void startEagerScopes() {
         // only one such scope
-        scopes.get(DEFAULT_SCOPE).start();
+        scopes.get(ApplicationScope.NAME).start();
     }
 }

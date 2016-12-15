@@ -5,6 +5,15 @@ import mlesiewski.simpledi.core.testutils.NewObjectProvider;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.Collection;
+import java.util.concurrent.CountDownLatch;
+
+import static mlesiewski.simpledi.core.testutils.ConcurrentTestHelper.THREAD_COUNT;
+import static mlesiewski.simpledi.core.testutils.ConcurrentTestHelper.getBeanGettingThread;
+import static mlesiewski.simpledi.core.testutils.ConcurrentTestHelper.getConcurrentBeanGettingThread;
+import static mlesiewski.simpledi.core.testutils.ConcurrentTestHelper.getRegisteringThread;
+import static mlesiewski.simpledi.core.testutils.ConcurrentTestHelper.getThreads;
+import static mlesiewski.simpledi.core.testutils.ConcurrentTestHelper.runThreads;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -13,6 +22,8 @@ import static org.hamcrest.core.IsNull.nullValue;
 public class SingletonScopeTest {
 
     private SingletonScope singletonScope;
+    private CountDownLatch countDownLatch;
+    private NewObjectProvider objectProvider;
 
     @Test(expectedExceptions = SimpleDiException.class)
     public void throwsExceptionOnEnd() throws Exception {
@@ -24,7 +35,6 @@ public class SingletonScopeTest {
     @Test
     public void beansAreNotInstantiatedUntilNeeded() throws Exception {
         // given
-        NewObjectProvider objectProvider = new NewObjectProvider();
         String name = "name";
         // when
         singletonScope.register(objectProvider, name);
@@ -39,8 +49,33 @@ public class SingletonScopeTest {
         assertThat(objectProvider.softDependenciesSet, is(true));
     }
 
+    @Test(invocationCount = THREAD_COUNT)
+    public void concurrentRegistersAndReadsDoNotThrowErrors() throws Exception {
+        // given
+        String name = "name";
+        Thread t1 = getRegisteringThread(singletonScope, objectProvider, name, countDownLatch);
+        Thread t2 = getBeanGettingThread(singletonScope, name, countDownLatch);
+        // when
+        runThreads(countDownLatch, t1, t2);
+        // then no error
+    }
+
+    @Test
+    public void concurrentReadsDoNotThrowErrors() throws Exception {
+        // given
+        String name = "name";
+        singletonScope.register(objectProvider, name);
+        Collection<Thread> threads = getThreads(THREAD_COUNT, () -> getConcurrentBeanGettingThread(singletonScope, name, countDownLatch));
+        // when
+        runThreads(countDownLatch, threads);
+        // then
+        assertThat(objectProvider.counter.get(), is(1));
+    }
+
     @BeforeMethod
     public void setUp() throws Exception {
         singletonScope = new SingletonScope();
+        countDownLatch = new CountDownLatch(1);
+        objectProvider = new NewObjectProvider();
     }
 }

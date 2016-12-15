@@ -186,9 +186,6 @@ Nonetheless I am sure that we'll figure this stuff out!
 
 ## 6. Plans for the future
 
-Stuff I want to have before 1.0.0:
-* make this library concurrency friendly
-
 Dreams for the future:
 * injecting implementations into supertypes (eg. interfaces)
 * don't wrap bean producers in providers if they have only one produce method
