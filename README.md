@@ -190,7 +190,6 @@ Nonetheless I am sure that we'll figure this stuff out!
 
 Stuff I want to have before 1.0.0:
 * make this library concurrency friendly
-* process annotations of the base classes (aka be polymorphism aware)
 
 Dreams for the future:
 * injecting implementations into supertypes (eg. interfaces)
