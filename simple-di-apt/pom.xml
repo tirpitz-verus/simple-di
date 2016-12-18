@@ -12,6 +12,7 @@
 
     <artifactId>simple-di-apt</artifactId>
     <packaging>jar</packaging>
+    <name>simple-di apt library</name>
 
     <dependencies>
 

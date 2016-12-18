@@ -12,6 +12,7 @@
 
     <artifactId>simple-di-core</artifactId>
     <packaging>jar</packaging>
+    <name>simple-di core library</name>
 
     <dependencies>
 
