@@ -14,6 +14,7 @@ deploy:
     api_key:
       secure: "jLpGP3WeX9NU6HOr6h6U0aGsv9V4m8+FCl6nMbwx/x7XAcC1+6cbUJic4sN3ZYDBuj4QTd0Qi8kmd03JS8E1r/s3qhmmSuo4feCUAehczXv7Lu3h8QeIP5A52eBzmguVqSXhyClZrlJpN1pJRewnaHUbTzzKirlA3++oNZegVHPJk3BLUHHWDV8uBhdLSriWtzhMlvjDXGvR7Z8NbIMth6kqy7HudvuVRpMFTgdzlRwu+NQCNps7pUCwNR868Ah5Tsxa5n9034pshrRkkXuTc1ZjxsV/GUwD7Gukrr31Ngs75cxHgBSdtLoF/2ncvbokgeQsvrGDxghWH1hASIb1auTkxdsTdegolDSzBwO0amUovIpw9WenF6Cp6QtWWm84dAcGDKIAbxoKUM/pAVfu28aj0oacu8WUok523HqrMsH0XhYqwsMcP8L1VT+y9jHsV8Vqd8xXs6arWins24z3AZP0ZilCrCb3S3KgfuDoDNvlGtPMr8rgUznvD9P8DyjZuWGAwsF32XHMrQ5DuEQDKyjnglDFbamJWwwnh/qaZeJCdTov4WfBtZe5i1BZCRY0wIJOh7ga7PEmlqWSZwxWq5+3FuasdxvxWU+Cx+TEFKSrRouy4iqy4XDwsxySc9NVgzCXegNeK0gGza8XwYicRFQGimTd2YNKo5giTWpx3mI="
     overwrite: true
+    file_glob: true
     file:
       - "simple-di-apt/target/simple-di-apt*.jar"
       - "simple-di-core/target/simple-di-core*.jar"

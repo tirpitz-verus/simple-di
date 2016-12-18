@@ -27,10 +27,16 @@
   },
   "files": [
     {
-      "includePattern": "simple-di-apt/target/simple-di-apt.*\\.jar"
+      "includePattern": "simple-di-apt/target/simple-di-apt.*\\.jar",
+      "matrixParams": {
+        "override": 1
+      }
     },
     {
-      "includePattern": "simple-di-core/target/simple-di-core.*\\.jar"
+      "includePattern": "simple-di-core/target/simple-di-core.*\\.jar",
+      "matrixParams": {
+        "override": 1
+      }
     }
   ],
   "publish": true
