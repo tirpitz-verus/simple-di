@@ -1,15 +1,27 @@
 language: java
-
 sudo: false
-
 cache:
   directories:
-    - $HOME/.m2
-
+    - "$HOME/.m2"
 jdk:
   - oraclejdk8
-
 addons:
   apt:
     packages:
       - oracle-java8-installer
+deploy:
+  - provider: releases
+    api_key:
+      secure: "jLpGP3WeX9NU6HOr6h6U0aGsv9V4m8+FCl6nMbwx/x7XAcC1+6cbUJic4sN3ZYDBuj4QTd0Qi8kmd03JS8E1r/s3qhmmSuo4feCUAehczXv7Lu3h8QeIP5A52eBzmguVqSXhyClZrlJpN1pJRewnaHUbTzzKirlA3++oNZegVHPJk3BLUHHWDV8uBhdLSriWtzhMlvjDXGvR7Z8NbIMth6kqy7HudvuVRpMFTgdzlRwu+NQCNps7pUCwNR868Ah5Tsxa5n9034pshrRkkXuTc1ZjxsV/GUwD7Gukrr31Ngs75cxHgBSdtLoF/2ncvbokgeQsvrGDxghWH1hASIb1auTkxdsTdegolDSzBwO0amUovIpw9WenF6Cp6QtWWm84dAcGDKIAbxoKUM/pAVfu28aj0oacu8WUok523HqrMsH0XhYqwsMcP8L1VT+y9jHsV8Vqd8xXs6arWins24z3AZP0ZilCrCb3S3KgfuDoDNvlGtPMr8rgUznvD9P8DyjZuWGAwsF32XHMrQ5DuEQDKyjnglDFbamJWwwnh/qaZeJCdTov4WfBtZe5i1BZCRY0wIJOh7ga7PEmlqWSZwxWq5+3FuasdxvxWU+Cx+TEFKSrRouy4iqy4XDwsxySc9NVgzCXegNeK0gGza8XwYicRFQGimTd2YNKo5giTWpx3mI="
+    overwrite: true
+    file:
+      - "simple-di-apt/target/simple-di-apt*.jar"
+      - "simple-di-core/target/simple-di-core*.jar"
+    skip_cleanup: true
+    on:
+      tags: true
+  - provider: bintray
+    file: .bintray.json
+    user: tirpitz-verus
+    key:
+      secure: "WS5vVW/B1J1F1BHyczPtK4xei+F6aWLOIswj0/1JhTWgR2AXO8lSP9DJuPvYk4yjmfarrYgT8yF7e8yridfXYsSdQgBiCqGLeyE3MYKTKZYICvVA9xzXQJP9APGr0cRqUAx/dCVVlMhtA625Dajuyfb9exigI8v1qpOYnn5NHffyE3EDOYV0+WIf/l5ydNyMtmxc8B+a7EpoIMTafM/SqjZWXdvgZsb86VrsX+tEsHXNfyHJfUwykQntxQiWRuV1Wg36gckJQZaGG/2qC6dOBLJakPh7840y6MACbeYkms6WXNukE92JsgEnavDMKjk8miTAUSXujEc9BsimQBOrO4C5VH9g4pLQq4WOdeUB1A/Nv54p1N2IGfvHABwVRilesJM4AT4NTsCm4sRcIJQVL7aJ8Hh9U5Ur8MEIXbDDrWqjwyJfCcnCPz7u9BRy24x780Fqhs4to4EYhcJs8Mo9uIvtel4o4DPh5FQvlyDV4IlAt/mtV3mFa65Fo1bnS0FpepC6W4Qf55nD2Nz1kUD7i40SyAIgeSjP+vSs/Kphengm18dL+MJ3r2NnuY92NlxGoMue05hvK1Qw352R5iaBIB55RDTymJgpwBSSQO2AXdxI0QU1IYRJEjOx+GYN0QKhy+j3/j1XjwBpZAIhgf5OKynnytuBO0+il42XMRvEeE4="

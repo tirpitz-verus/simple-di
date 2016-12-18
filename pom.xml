@@ -6,7 +6,7 @@
 
     <groupId>mlesiewski</groupId>
     <artifactId>simple-di</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.9.1</version>
 	<packaging>pom</packaging>
     <description>a very simple dependency injection framework Java</description>
     <url>https://github.com/tirpitz-verus/simple-di</url>
@@ -83,13 +83,13 @@
             <dependency>
                 <groupId>mlesiewski</groupId>
                 <artifactId>simple-di-core</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>0.9.1</version>
             </dependency>
 
             <dependency>
                 <groupId>mlesiewski</groupId>
                 <artifactId>simple-di-apt</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>0.9.1</version>
             </dependency>
 
             <dependency>
