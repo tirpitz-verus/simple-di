@@ -2,6 +2,7 @@ package mlesiewski.simpledi.core.scopes;
 
 import mlesiewski.simpledi.core.BeanProvider;
 import mlesiewski.simpledi.core.SimpleDiException;
+import mlesiewski.simpledi.core.annotations.Bean;
 import org.slf4j.Logger;
 
 import java.util.HashMap;
@@ -9,7 +10,7 @@ import java.util.WeakHashMap;
 
 /**
  * Base {@link Scope} implementation. When a {@link #getBean(String)} is called a {@link WeakHashMap} is checked
- * first to see if it contains a {@link mlesiewski.simpledi.core.annotations.Bean} under the name provided. If the value is
+ * first to see if it contains a {@link Bean} under the name provided. If the value is
  * {@code null} then a registered {@link BeanProvider} is asked for a new instance.
  */
 public class BaseScopeImpl implements Scope {
@@ -40,7 +41,10 @@ public class BaseScopeImpl implements Scope {
         return bean;
     }
 
-    /** Returns {@link mlesiewski.simpledi.core.annotations.Bean} instance from cache. */
+    /**
+     * Returns {@link Bean} instance from cache.
+     * This method is not thread-safe - a provider could be called many times by concurrent threads.
+     */
     protected <T> T getBeanFromBeans(String name) {
         logger.trace("getBeanFromBeans({})", name);
         @SuppressWarnings("unchecked")
@@ -53,7 +57,7 @@ public class BaseScopeImpl implements Scope {
         return bean;
     }
 
-    /** Calls a provider for a {@link mlesiewski.simpledi.core.annotations.Bean} instance. */
+    /** Calls a provider for a {@link Bean} instance. */
     protected <T> T provideBean(String name) {
         logger.trace("provideBean({})", name);
         T bean;

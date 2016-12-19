@@ -19,43 +19,43 @@
     "public_stats": false
   },
   "version": {
-    "name": "0.9.1",
+    "name": "1.0.0",
     "released": "2016-12-18",
-    "vcs_tag": "v0.9.1",
+    "vcs_tag": "v1.0.0",
     "gpgSign": false
   },
   "files": [
     {
-      "includePattern": "simple-di-core/target/simple-di-core-0.9.1.jar",
-      "uploadPattern": "mlesiewski/simple-di-core/0.9.1/simple-di-core-0.9.1.jar",
+      "includePattern": "simple-di-core/target/simple-di-core-1.0.0.jar",
+      "uploadPattern": "mlesiewski/simple-di-core/1.0.0/simple-di-core-1.0.0.jar",
       "matrixParams": {
         "override": 1
       }
     },
     {
       "includePattern": "simple-di-core/pom.xml",
-      "uploadPattern": "mlesiewski/simple-di-core/0.9.1/simple-di-core-0.9.1.pom",
+      "uploadPattern": "mlesiewski/simple-di-core/1.0.0/simple-di-core-1.0.0.pom",
       "matrixParams": {
         "override": 1
       }
     },
     {
-      "includePattern": "simple-di-apt/target/simple-di-apt-0.9.1.jar",
-      "uploadPattern": "mlesiewski/simple-di-apt/0.9.1/simple-di-apt-0.9.1.jar",
+      "includePattern": "simple-di-apt/target/simple-di-apt-1.0.0.jar",
+      "uploadPattern": "mlesiewski/simple-di-apt/1.0.0/simple-di-apt-1.0.0.jar",
       "matrixParams": {
         "override": 1
       }
     },
     {
       "includePattern": "simple-di-apt/pom.xml",
-      "uploadPattern": "mlesiewski/simple-di-apt/0.9.1/simple-di-apt-0.9.1.pom",
+      "uploadPattern": "mlesiewski/simple-di-apt/1.0.0/simple-di-apt-1.0.0.pom",
       "matrixParams": {
         "override": 1
       }
     },
     {
       "includePattern": "pom.xml",
-      "uploadPattern": "mlesiewski/simple-di/0.9.1/simple-di-0.9.1.pom",
+      "uploadPattern": "mlesiewski/simple-di/1.0.0/simple-di-1.0.0.pom",
       "matrixParams": {
         "override": 1
       }
